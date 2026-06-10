@@ -44,8 +44,8 @@ export default function TodoListWorkSpace(props: TodoListWorkSpaceProps) {
   }
 
   return (
-    <div className="bg-slate-900 text-white p-4 md:p-8 flex flex-col justify-start w-full h-full overflow-clip">
-      <header className="w-full mb-4 flex items-center justify-between shrink-0">
+    <div className=" text-white  flex flex-col justify-start w-full h-full overflow-clip">
+      <header className="w-full px-8 py-2 mb-4 flex items-center justify-between shrink-0">
         <h1 className="font-extrabold text-2xl tracking-tight">
           {props.title}
         </h1>
