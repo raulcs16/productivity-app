@@ -22,11 +22,11 @@ export default function TodoDelegate(props: TodoDelegateProps) {
 
   return (
     <li
-      className="px-2 py-1 cursor-pointer hover:bg-slate-50 transition-colors duration-200 rounded"
+      className="px-6 py-1 cursor-pointer hover:bg-slate-50 transition-colors duration-200 rounded"
       onDoubleClick={() => props.onDoubleClicked(props.id, props.state)}
     >
       {/* 3. Inject the dynamic styles via a template literal */}
-      <h1 className={`select-none text-base ${textStyles}`}>{props.task}</h1>
+      <p className={`select-none text-base ${textStyles}`}>{props.task}</p>
     </li>
   );
 }

@@ -24,3 +24,24 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+::-webkit-scrollbar {
+  width: 6px; /* Make them thin and elegant */
+  height: 6px; /* For horizontal tracks if needed */
+}
+
+/* 2. Target the scrolling handle draggable thumb */
+::-webkit-scrollbar-thumb {
+  background-color: rgba(148, 163, 184, 0.2); /* Low-opacity slate color */
+  border-radius: 9999px; /* Fully rounded pill style */
+  transition: background-color 0.2s ease;
+}
+
+/* 3. Highlight the thumb slightly on hover */
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(148, 163, 184, 0.4); /* Brighter on user hover */
+}
+
+/* 4. Keep the empty background track invisible */
+::-webkit-scrollbar-track {
+  background: transparent;
+}

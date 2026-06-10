@@ -2,6 +2,7 @@
 import { Todo, todo_state } from "@/src/core/todolist/todo";
 import TodoDelegate from "./TodoDelegate";
 import TextInput from "../controls/TextInput";
+
 interface TodoListViewProps {
   onItemDoubleClicked: (
     todoId: number,
@@ -28,21 +29,18 @@ interface TodoListSectionProps {
 
 export default function TodoListView(props: TodoListViewProps) {
   return (
-    <div className="w-full mx-auto p-4">
-      {/* Main Title Banner */}
-      <header className="mb-6 pb-4 border-b border-slate-100">
-        <h1 className="font-extrabold text-3xl text-slate-800 tracking-tight">
+    <div className="w-full h-full flex flex-col overflow-hidden p-1">
+      <header className="mb-6 pb-4 space-y-3 border-b border-slate-700/40 shrink-0 px-3 py-2">
+        <h1 className="font-extrabold text-3xl text-slate-100 tracking-tight">
           {props.title}
         </h1>
-      </header>
-
-      <div className="space-y-3 ">
         <TextInput
           onChange={(text) => {}}
           onEnter={(text) => {}}
           placeHolder="Add Todo's"
-        ></TextInput>
-        {/* SECTION 2: READY */}
+        />
+      </header>
+      <div className="flex-1 overflow-y-auto pr-1 no-scrollbar space-y-4 pb-2">
         <TodoListSection
           id={props.id}
           title="⚡ To Do"
@@ -50,6 +48,7 @@ export default function TodoListView(props: TodoListViewProps) {
           todos={props.todos.filter((todo) => todo.state === todo_state.Ready)}
           onItemDoubleClicked={props.onItemDoubleClicked}
         />
+
         <TodoListSection
           id={props.id}
           title="🔥 In Progress / Started"
@@ -61,7 +60,6 @@ export default function TodoListView(props: TodoListViewProps) {
           onItemDoubleClicked={props.onItemDoubleClicked}
         />
 
-        {/* SECTION 3: SCHEDULED */}
         <TodoListSection
           id={props.id}
           title="📅 Scheduled"
@@ -72,30 +70,31 @@ export default function TodoListView(props: TodoListViewProps) {
           onItemDoubleClicked={props.onItemDoubleClicked}
         />
 
-        {/* SECTION 4: COMPLETED */}
+        {/* HISTORICAL / FOOTER SECTIONS:
+            Moved inside the scrollable view region so they stay properly styled 
+            at the bottom of the content track without forcing layout-breaking issues.
+        */}
+        <div className="mt-8 pt-6 border-t border-slate-700/40 space-y-4">
+          <TodoListSection
+            id={props.id}
+            title="✅ Completed"
+            textColor="#10b981"
+            todos={props.todos.filter(
+              (todo) => todo.state === todo_state.Completed
+            )}
+            onItemDoubleClicked={props.onItemDoubleClicked}
+          />
+          <TodoListSection
+            id={props.id}
+            title="📦 Archived"
+            textColor="#94a3b8"
+            todos={props.todos.filter(
+              (todo) => todo.state === todo_state.Archived
+            )}
+            onItemDoubleClicked={props.onItemDoubleClicked}
+          />
+        </div>
       </div>
-
-      {/* ARCHIVED (Tucked away neatly at the bottom out of view since it's historical data) */}
-      <footer className="mt-12 pt-6 border-t border-slate-100">
-        <TodoListSection
-          id={props.id}
-          title="✅ Completed"
-          textColor="#10b981"
-          todos={props.todos.filter(
-            (todo) => todo.state === todo_state.Completed
-          )}
-          onItemDoubleClicked={props.onItemDoubleClicked}
-        />
-        <TodoListSection
-          id={props.id}
-          title="📦 Archived"
-          textColor="#94a3b8"
-          todos={props.todos.filter(
-            (todo) => todo.state === todo_state.Archived
-          )}
-          onItemDoubleClicked={props.onItemDoubleClicked}
-        />
-      </footer>
     </div>
   );
 }
@@ -107,27 +106,27 @@ function TodoListSection(props: TodoListSectionProps) {
         p-5 rounded-2xl border transition-all duration-200
         ${
           props.isFocused
-            ? "bg-amber-50/40 border-amber-200 shadow-md ring-1 ring-amber-300/30" // Special focus card
-            : "bg-white border-slate-100 shadow-sm"
+            ? "bg-slate-800 border-amber-500/30 shadow-md ring-1 ring-amber-500/20" // Focused visual tweaks for dark theme consistency
+            : "bg-slate-900/40 border-slate-700/40 shadow-sm"
         }
       `}
     >
       <h2
-        className={`font-bold text-lg flex items-center justify-between mb-3`}
+        className="font-bold text-lg flex items-center justify-between mb-3 border-b"
         style={{ color: props.textColor }}
       >
         <span>{props.title}</span>
-        <span className="text-xs font-semibold px-2 py-0.5 bg-slate-100 text-slate-600 rounded-full">
+        <span className="text-xs font-semibold px-2 py-0.5 bg-slate-800 text-slate-400 border border-slate-700 rounded-full">
           {props.todos.length}
         </span>
       </h2>
 
       {props.todos.length === 0 ? (
-        <p className="text-sm text-slate-400 italic py-4 text-center">
+        <p className="text-sm text-slate-500 italic py-2 text-center">
           No tasks here
         </p>
       ) : (
-        <ol className="space-y-1.5 max-h-64 overflow-y-auto pr-1">
+        <ol className="space-y-1.5 h-auto max-h-[210px] overflow-y-auto pr-1 normal-scrollbar">
           {props.todos.map((todo) => (
             <TodoDelegate
               key={todo.id}

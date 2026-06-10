@@ -26,12 +26,9 @@ const workTodos: Todo[] = [
 ];
 export default function TodoListApp(props: TodoListAppProps) {
   return (
-    <div className="w-full">
-      <h1>{"TodoListApp"}</h1>
-      <TodoListWorkSpace
-        title="Work"
-        lists={[workTodos, workTodos, workTodos]}
-      ></TodoListWorkSpace>
-    </div>
+    <TodoListWorkSpace
+      title="Work"
+      lists={[workTodos, workTodos, workTodos]}
+    ></TodoListWorkSpace>
   );
 }
