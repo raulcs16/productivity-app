@@ -4,6 +4,7 @@ import React, { useState } from "react";
 interface TextInputProps {
   onEnter: (text: string) => void;
   onChange: (text: string) => void;
+  onBlur?: () => void;
   placeHolder: string;
 }
 
@@ -22,6 +23,10 @@ export default function TextInput(props: TextInputProps) {
       props.onEnter(inputValue.trim());
       setInputValue("");
     }
+    if (event.key == "Escape") {
+      setInputValue("");
+      props.onBlur?.();
+    }
   };
 
   return (
@@ -32,6 +37,7 @@ export default function TextInput(props: TextInputProps) {
       value={inputValue}
       onChange={handleChange}
       onKeyDown={handleKeyDown}
+      onBlur={() => props.onBlur?.()}
     />
   );
 }

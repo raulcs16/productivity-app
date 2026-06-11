@@ -3,12 +3,13 @@
 import ContextMenu, { ContextMenuItem } from "../controls/ContextMenu";
 
 interface DirectoryMenuContextProps {
+  directoryId: number;
   x: number;
   y: number;
   open: boolean;
   onClose: () => void;
   onRename: () => void;
-  onAddFile: () => void;
+  onAddFile: (directoryId: number) => void;
 }
 
 export default function DirectoryMenuContext(props: DirectoryMenuContextProps) {
@@ -42,7 +43,7 @@ export default function DirectoryMenuContext(props: DirectoryMenuContextProps) {
       ></ContextMenuItem>
       <ContextMenuItem
         text="add file"
-        onTriggered={() => props.onAddFile()}
+        onTriggered={() => props.onAddFile(props.directoryId)}
         icon={
           <svg
             xmlns="http://www.w3.org/2000/svg"
