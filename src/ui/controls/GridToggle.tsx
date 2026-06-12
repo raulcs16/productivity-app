@@ -21,8 +21,8 @@ export default function GridToggle({ onToggled }: GridToggleProps) {
       title="Toggle Grid View"
       className={`p-2.5 rounded-lg border transition-all duration-200 ease-out flex items-center justify-center group ${
         isGridActive
-          ? "bg-emerald-500/10 border-emerald-500/40 text-emerald-400 shadow-md shadow-emerald-500/5"
-          : "bg-slate-950/40 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700 hover:bg-slate-900/50"
+          ? " border-emerald-500/40 text-emerald-400 shadow-md shadow-emerald-500/5"
+          : " border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700 hover:bg-slate-900/50"
       }`}
     >
       {/* Custom SVG 4-Square Layout Icon */}

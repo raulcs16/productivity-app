@@ -1,6 +1,6 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
-import { Todo } from "@/src/core/todolist/todo";
+import { Todo, TodoList } from "@/src/core/todolist/todo";
 import HoverCard from "../cards/HoverCard";
 import TodoListView from "./TodoListView";
 import NextPrevButtons from "../controls/NextPrevButtons";
@@ -9,9 +9,9 @@ import Grid from "../views/Grid";
 import GridToggle from "../controls/GridToggle";
 
 interface TodoListWorkSpaceProps {
-  listId: number;
-  lists: Todo[][];
+  id: number;
   title: string;
+  lists: TodoList[];
   onTodoAdded: (listId: number, task: string) => void;
 }
 
@@ -47,12 +47,12 @@ export default function TodoListWorkSpace(props: TodoListWorkSpaceProps) {
 
   return (
     <div className=" text-white  flex flex-col justify-start w-full h-full overflow-clip">
-      <header className="w-full px-8 py-2 mb-4 flex items-center justify-between shrink-0">
+      <header className="w-full px-8 py-2 mb-4 flex flex-col md:flex-row items-center justify-between shrink-0 gap-4">
         <h1 className="font-extrabold text-2xl tracking-tight">
           {props.title}
         </h1>
 
-        <div className="flex gap-2 items-center">
+        <div className="w-full flex items-center  justify-between md:justify-end gap-4">
           <GridToggle
             onToggled={(state) => {
               handleToggle(state);
@@ -75,23 +75,23 @@ export default function TodoListWorkSpace(props: TodoListWorkSpaceProps) {
           onIntentIndexChanged={(index) => {
             scrollToBoard(index);
           }}
-          renderItem={(todos, index, isFocused) => (
+          renderItem={(todolist, index, isFocused) => (
             <HoverCard
               index={index}
-              className="h-full p-6"
+              className="h-full"
               onClicked={(index) => {
                 scrollToBoard(index);
               }}
             >
               <TodoListView
-                id={index}
-                title={`Board Workspace - ${index + 1}`}
-                todos={todos}
+                id={todolist.id}
+                title={todolist.title}
+                todos={todolist.todos}
                 onItemDoubleClicked={(id, state, lId) =>
                   console.log("Task click:", id)
                 }
                 onTodoAdded={(task: string) =>
-                  props.onTodoAdded(props.listId, task)
+                  props.onTodoAdded(todolist.id, task)
                 }
               />
             </HoverCard>
@@ -105,18 +105,16 @@ export default function TodoListWorkSpace(props: TodoListWorkSpaceProps) {
             scrollToBoard(index);
             setLayout(0);
           }}
-          renderItem={(todos, index, isFocused) => (
+          renderItem={(todolist, index, isFocused) => (
             <HoverCard index={index} className="h-full p-6">
               <TodoListView
-                id={index}
-                title={`Board Workspace -${index + 1}`}
-                todos={todos}
+                id={todolist.id}
+                title={todolist.title}
+                todos={todolist.todos}
                 onItemDoubleClicked={(id) => {
                   console.log("task click");
                 }}
-                onTodoAdded={(task: string) =>
-                  props.onTodoAdded(props.listId, task)
-                }
+                onTodoAdded={(task: string) => {}}
               ></TodoListView>
             </HoverCard>
           )}

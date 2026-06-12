@@ -21,17 +21,8 @@ export default function FileDelegate(props: FileDelegateProps) {
       }}
     >
       <ContextButton
-        onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-          // Left-click on the 3 dots: Position relative to the button itself
-          e.stopPropagation(); // Stop row click from triggering
-
-          const rect = e.currentTarget.getBoundingClientRect();
-
-          // Anchor the menu to the bottom-right corner of the button
-          const menuX = rect.right;
-          const menuY = rect.bottom;
-
-          props.onContextMenu(props.id, menuX, menuY);
+        onClick={(x, y) => {
+          props.onContextMenu(props.id, x, y);
         }}
       >
         <p className="px-4 py-1 text-lg truncate">{props.title}</p>

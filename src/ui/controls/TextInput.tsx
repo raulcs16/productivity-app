@@ -33,7 +33,7 @@ export default function TextInput(props: TextInputProps) {
     <input
       type="text"
       placeholder={props.placeHolder}
-      className="p-2 border-2 border-blue-300 w-full rounded-xl focus:outline-none focus:border-blue-500  text-white transition-colors"
+      className="p-1 border-2 border-blue-300 w-full rounded-xl focus:outline-none focus:border-blue-500  text-white transition-colors"
       value={inputValue}
       onChange={handleChange}
       onKeyDown={handleKeyDown}

@@ -108,7 +108,7 @@ export default function SlideOver<T>({
             key={index}
             data-index={index}
             style={{ scrollSnapAlign: "center" }}
-            className="w-[calc(66vw-32px)] min-w-[280px] h-full flex flex-col justify-start shrink-0 transition-all duration-500 ease-out transform-gpu"
+            className="w-[calc(88vw-32px)] md:w-[calc(66vw-32px)] min-w-[280px] h-full flex flex-col justify-start shrink-0 transition-all duration-500 ease-out transform-gpu"
           >
             <div
               className="w-full h-full transition-all duration-500 ease-out flex flex-col"

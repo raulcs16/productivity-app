@@ -1,6 +1,6 @@
 import TodoListApp from "@/src/apps/TodoListApp";
 import { FDDirectory } from "@/src/core/flat-directory/directory";
-import { Todo, todo_state } from "@/src/core/todolist/todo";
+import { Todo, todo_state, TodoWorkSpace } from "@/src/core/todolist/todo";
 const workTodos: Todo[] = [
   { task: "help1", state: todo_state.Scheduled, id: 1 },
   { task: "help1", state: todo_state.Scheduled, id: 2 },
@@ -54,12 +54,28 @@ const mockDirectories: FDDirectory[] = [
     files: [],
   },
 ];
+const workspace: TodoWorkSpace = {
+  id: mockDirectories[0].id,
+  title: mockDirectories[0].title,
+  lists: [
+    {
+      id: mockDirectories[0].files[0].id,
+      title: mockDirectories[0].files[0].title,
+      todos: workTodos,
+    },
+    {
+      id: mockDirectories[1].files[1].id,
+      title: mockDirectories[1].files[1].title,
+      todos: workTodos,
+    },
+  ],
+};
 export default function Home() {
   return (
     <main className="w-screen h-screen px-1 py-10  bg-white dark:bg-black overflow-clip">
       <TodoListApp
         directories={mockDirectories}
-        workingDirectoryLists={[workTodos, workTodos, workTodos]}
+        todoWorkSpace={workspace}
       ></TodoListApp>
     </main>
   );

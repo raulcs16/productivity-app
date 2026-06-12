@@ -5,11 +5,12 @@ import React, { useState } from "react";
 interface WorkspaceProps {
   workspace: React.ReactNode;
   sideBar: React.ReactNode;
+  sideBarOpen: boolean;
 }
 
 export default function Workspace(props: WorkspaceProps) {
   // Defaulting to true so the user sees their file ecosystem on initial mount
-  const [sideBarOpen, setSideBarOpen] = useState<boolean>(true);
+  const [sideBarOpen, setSideBarOpen] = useState<boolean>(props.sideBarOpen);
 
   return (
     <div className="w-full h-full flex overflow-hidden min-w-0 relative">

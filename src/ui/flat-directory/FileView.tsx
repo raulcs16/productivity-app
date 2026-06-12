@@ -25,19 +25,27 @@ interface FileViewProps {
 export default function FileView(props: FileViewProps) {
   return (
     <div className="w-full">
-      <h1
-        className="font-bold py-1 text-blue-500 px-2 cursor-pointer hover:bg-slate-400"
-        onClick={() => {
-          props.onClicked(props.id);
-        }}
-        onContextMenu={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          props.onDirectoryContextMenu(props.id, e.clientX, e.clientY);
-        }}
-      >
-        {props.title}
-      </h1>
+      <div className="px-2 py-1 cursor-pointer hover:bg-slate-400">
+        <ContextButton
+          onClick={(x, y) => {
+            props.onDirectoryContextMenu(props.id, x, y);
+          }}
+        >
+          <h1
+            className="font-bold  text-blue-500"
+            onClick={() => {
+              props.onClicked(props.id);
+            }}
+            onContextMenu={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              props.onDirectoryContextMenu(props.id, e.clientX, e.clientY);
+            }}
+          >
+            {props.title}
+          </h1>
+        </ContextButton>
+      </div>
       <ol className="w-full">
         {props.files.map((file, index) => (
           <FileDelegate

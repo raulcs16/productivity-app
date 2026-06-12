@@ -30,9 +30,9 @@ interface TodoListSectionProps {
 
 export default function TodoListView(props: TodoListViewProps) {
   return (
-    <div className="w-full h-full flex flex-col overflow-hidden p-1">
-      <header className="mb-6 pb-4 space-y-3 border-b border-slate-700/40 shrink-0 px-3 py-2">
-        <h1 className="font-extrabold text-3xl text-slate-100 tracking-tight">
+    <div className="w-full h-full flex flex-col overflow-hidden p-2">
+      <header className="mb-6 pb-4 space-y-3 border-b shrink-0  py-2 w-full">
+        <h1 className="font-extrabold text-xl text-slate-100 tracking-tight">
           {props.title}
         </h1>
         <TextInput
@@ -46,7 +46,7 @@ export default function TodoListView(props: TodoListViewProps) {
       <div className="flex-1 overflow-y-auto pr-1 no-scrollbar space-y-4 pb-2">
         <TodoListSection
           id={props.id}
-          title="⚡ To Do"
+          title="To Do"
           textColor="#3b82f6"
           todos={props.todos.filter((todo) => todo.state === todo_state.Ready)}
           onItemDoubleClicked={props.onItemDoubleClicked}
@@ -54,7 +54,7 @@ export default function TodoListView(props: TodoListViewProps) {
 
         <TodoListSection
           id={props.id}
-          title="🔥 In Progress / Started"
+          title="In Progress"
           textColor="#f59e0b"
           isFocused={true} // Triggers special emphasis styling
           todos={props.todos.filter(
@@ -65,7 +65,7 @@ export default function TodoListView(props: TodoListViewProps) {
 
         <TodoListSection
           id={props.id}
-          title="📅 Scheduled"
+          title="Scheduled"
           textColor="#64748b"
           todos={props.todos.filter(
             (todo) => todo.state === todo_state.Scheduled
@@ -80,7 +80,7 @@ export default function TodoListView(props: TodoListViewProps) {
         <div className="mt-8 pt-6 border-t border-slate-700/40 space-y-4">
           <TodoListSection
             id={props.id}
-            title="✅ Completed"
+            title="Completed"
             textColor="#10b981"
             todos={props.todos.filter(
               (todo) => todo.state === todo_state.Completed
@@ -89,7 +89,7 @@ export default function TodoListView(props: TodoListViewProps) {
           />
           <TodoListSection
             id={props.id}
-            title="📦 Archived"
+            title="Archived"
             textColor="#94a3b8"
             todos={props.todos.filter(
               (todo) => todo.state === todo_state.Archived
@@ -106,11 +106,11 @@ function TodoListSection(props: TodoListSectionProps) {
   return (
     <section
       className={`
-        p-5 rounded-2xl border transition-all duration-200
+        w-full p-2 rounded-2xl transition-all duration-200
         ${
           props.isFocused
-            ? "bg-slate-800 border-amber-500/30 shadow-md ring-1 ring-amber-500/20" // Focused visual tweaks for dark theme consistency
-            : "bg-slate-900/40 border-slate-700/40 shadow-sm"
+            ? " shadow-md" // Focused visual tweaks for dark theme consistency
+            : " shadow-sm"
         }
       `}
     >
@@ -119,7 +119,7 @@ function TodoListSection(props: TodoListSectionProps) {
         style={{ color: props.textColor }}
       >
         <span>{props.title}</span>
-        <span className="text-xs font-semibold px-2 py-0.5 bg-slate-800 text-slate-400 border border-slate-700 rounded-full">
+        <span className="text-xs font-semibold px-2 py-0.5 text-slate-400 border border-slate-700 rounded-full">
           {props.todos.length}
         </span>
       </h2>
