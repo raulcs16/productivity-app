@@ -12,6 +12,7 @@ interface TodoListViewProps {
   id: number;
   title: string;
   todos: Todo[];
+  onTodoAdded: (task: string) => void;
 }
 
 interface TodoListSectionProps {
@@ -36,7 +37,9 @@ export default function TodoListView(props: TodoListViewProps) {
         </h1>
         <TextInput
           onChange={(text) => {}}
-          onEnter={(text) => {}}
+          onEnter={(text) => {
+            props.onTodoAdded(text);
+          }}
           placeHolder="Add Todo's"
         />
       </header>

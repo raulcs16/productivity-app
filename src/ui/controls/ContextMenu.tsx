@@ -77,7 +77,10 @@ export default function ContextMenu({
       {/* The Menu Canvas Frame */}
       <div
         className="fixed z-50 min-w-[160px] bg-slate-950/95 backdrop-blur-md border border-slate-800 rounded-lg p-1 shadow-xl shadow-black/50 flex flex-col gap-0.5 transform-gpu animate-in fade-in zoom-in-95 duration-100"
-        style={{ top: `${y}px`, left: `${x}px` }}
+        style={{
+          top: `${y}px`,
+          right: `${window.innerWidth - x}px`,
+        }}
       >
         {children}
       </div>

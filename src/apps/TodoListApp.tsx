@@ -4,7 +4,7 @@ import TodoListWorkSpace from "../ui/todolist/TodoListWorkSpace";
 import Explorer from "../ui/flat-directory/Explorer";
 import { FDDirectory } from "@/src/core/flat-directory/directory";
 import { useState } from "react";
-import { dir } from "console";
+import Workspace from "../ui/layout/WorkSpace";
 
 interface TodoListAppProps {
   directories: FDDirectory[];
@@ -54,13 +54,34 @@ export default function TodoListApp(props: TodoListAppProps) {
       })
     );
   }
+  // --- UPDATED METHOD ---
+  function handleTodoAdded(listId: number, task: string) {
+    const newTodo: Todo = {
+      id: Date.now(),
+      task: task,
+      state: todo_state.Ready,
+    };
+    setTodoLists((prevLists) =>
+      prevLists.map((list, index) => {
+        if (index !== listId) return list;
+        return [...list, newTodo];
+      })
+    );
+  }
   return (
     <div className="w-full h-full">
-      <div className="w-full h-full flex overflow-hidden min-w-0">
-        <div className="flex-1 h-full flex flex-col min-w-0 overflow-hidden">
-          <TodoListWorkSpace title="Work" lists={todoLists}></TodoListWorkSpace>
-        </div>
-        <div className="w-64 h-full flex flex-col min-w-0 shrink-0 overflow-hidden border-l">
+      <Workspace
+        workspace={
+          <TodoListWorkSpace
+            title="Work"
+            lists={todoLists}
+            listId={0}
+            onTodoAdded={function (listId: number, task: string): void {
+              handleTodoAdded(listId, task);
+            }}
+          ></TodoListWorkSpace>
+        }
+        sideBar={
           <Explorer
             directories={directories}
             onFileEdit={function (dirId: number, fileId: number): void {
@@ -82,8 +103,8 @@ export default function TodoListApp(props: TodoListAppProps) {
               handleAddNewFile(dirId, fileName);
             }}
           ></Explorer>
-        </div>
-      </div>
+        }
+      ></Workspace>
     </div>
   );
 }

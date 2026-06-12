@@ -9,8 +9,10 @@ import Grid from "../views/Grid";
 import GridToggle from "../controls/GridToggle";
 
 interface TodoListWorkSpaceProps {
+  listId: number;
   lists: Todo[][];
   title: string;
+  onTodoAdded: (listId: number, task: string) => void;
 }
 
 export default function TodoListWorkSpace(props: TodoListWorkSpaceProps) {
@@ -88,6 +90,9 @@ export default function TodoListWorkSpace(props: TodoListWorkSpaceProps) {
                 onItemDoubleClicked={(id, state, lId) =>
                   console.log("Task click:", id)
                 }
+                onTodoAdded={(task: string) =>
+                  props.onTodoAdded(props.listId, task)
+                }
               />
             </HoverCard>
           )}
@@ -109,6 +114,9 @@ export default function TodoListWorkSpace(props: TodoListWorkSpaceProps) {
                 onItemDoubleClicked={(id) => {
                   console.log("task click");
                 }}
+                onTodoAdded={(task: string) =>
+                  props.onTodoAdded(props.listId, task)
+                }
               ></TodoListView>
             </HoverCard>
           )}

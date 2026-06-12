@@ -3,6 +3,7 @@ import { FDFile } from "@/src/core/flat-directory/file";
 import FileDelegate from "./FileDelegate";
 import TextInput from "../controls/TextInput";
 import Scrim from "../controls/Scrim";
+import ContextButton from "../controls/ContextButton";
 
 interface FileViewProps {
   id: number;
