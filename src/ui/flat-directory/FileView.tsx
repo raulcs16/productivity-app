@@ -10,6 +10,7 @@ interface FileViewProps {
   title: string;
   files: FDFile[];
   edit: boolean;
+  selectedId: number;
   onClicked: (id: number) => void;
   onFileClicked: (fileId: number, directoryId: number) => void;
   onFileContextMenu: (
@@ -51,6 +52,7 @@ export default function FileView(props: FileViewProps) {
           <FileDelegate
             key={index}
             id={file.id}
+            isActive={file.id === props.selectedId}
             title={file.title}
             onSelected={(fileId) => {
               props.onFileClicked(fileId, props.id);

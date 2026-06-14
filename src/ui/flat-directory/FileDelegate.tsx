@@ -3,13 +3,16 @@ import ContextButton from "../controls/ContextButton";
 interface FileDelegateProps {
   id: number;
   title: string;
+  isActive: boolean;
   onSelected: (id: number) => void;
   onContextMenu: (fileId: number, x: number, y: number) => void;
 }
 export default function FileDelegate(props: FileDelegateProps) {
   return (
     <li
-      className=" w-full hover:bg-slate-400 cursor-pointer px-3"
+      className={` w-full hover:bg-slate-400 cursor-pointer px-3 ${
+        props.isActive && "bg-[#FFFFFF11]"
+      }`}
       onClick={() => {
         props.onSelected(props.id);
       }}

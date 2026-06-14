@@ -9,13 +9,14 @@ import Scrim from "../controls/Scrim";
 
 interface ExplorerProps {
   directories: FDDirectory[];
-
+  selectedId: number;
   onFileEdit: (dirId: number, fileId: number) => void;
   onFileDelete: (dirId: number, fileId: number) => void;
   onDirEdit: (dirId: number) => void;
   onDirAddFile: (dirId: number) => void;
   onNewDirectory: (directory: string) => void;
   onNewFile: (dirtoryId: number, newFile: string) => void;
+  onFileSelected: (dirId: number, fileId: number) => void;
 }
 export default function Explorer(props: ExplorerProps) {
   const [edit, setEdit] = useState<boolean>(false);
@@ -82,8 +83,11 @@ export default function Explorer(props: ExplorerProps) {
             edit={fd.id === editDir}
             title={fd.title}
             files={fd.files}
+            selectedId={props.selectedId}
             onClicked={(id) => {}}
-            onFileClicked={(fileId, dirId) => {}}
+            onFileClicked={(fileId, dirId) => {
+              props.onFileSelected(dirId, fileId);
+            }}
             onFileContextMenu={(dirId, fileId, x, y) => {
               setFileMenuConfig({ dirId, fileId, x, y });
             }}

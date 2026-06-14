@@ -10,6 +10,7 @@ import Explorer from "../ui/flat-directory/Explorer";
 import { FDDirectory } from "@/src/core/flat-directory/directory";
 import { useState } from "react";
 import Workspace from "../ui/layout/WorkSpace";
+import { FDFile } from "../core/flat-directory/file";
 
 interface TodoListAppProps {
   directories: FDDirectory[];
@@ -23,6 +24,10 @@ export default function TodoListApp(props: TodoListAppProps) {
   const [todoLists, setTodoLists] = useState<TodoList[]>(
     props.todoWorkSpace.lists
   );
+  const [currentDirectoryId, setCurrentDirectoryId] = useState(
+    props.todoWorkSpace.id
+  );
+  const [currentListId, setCurrentListId] = useState(0);
 
   function handleAddDiretory(title: string) {
     // //for now lets mock adding an empty directory
@@ -34,39 +39,76 @@ export default function TodoListApp(props: TodoListAppProps) {
     // setDirectories((prev) => [...prev, newDirectory]);
   }
   function handleAddNewFile(dirId: number, fileName: string) {
-    // const dirExists = directories.some((fd) => fd.id === dirId);
-    // if (!dirExists) return;
-    // // 2. Create our new file object matching your file schema
-    // const newFile = {
-    //   id: Date.now(), // Secure a unique timestamp identifier for mock tracking
-    //   title: fileName,
-    // };
-    // // 3. Update state immutably by transforming the specific directory node
-    // setDirectories((prevDirectories) =>
-    //   prevDirectories.map((dir) => {
-    //     // If this isn't the directory we are looking for, pass it through unchanged
-    //     if (dir.id !== dirId) return dir;
-    //     // Found the target directory! Return a clean copy with the new file appended
-    //     return {
-    //       ...dir,
-    //       files: [...dir.files, newFile],
-    //     };
-    //   })
-    // );
+    const newFile = {
+      id: Date.now(), // Secure a unique timestamp identifier for mock tracking
+      title: fileName,
+    };
+    setDirectories((prevDirectories) =>
+      prevDirectories.map((dir) => {
+        if (dir.id !== dirId) return dir;
+        return {
+          ...dir,
+          files: [...dir.files, newFile],
+        };
+      })
+    );
+    const list: TodoList = {
+      id: newFile.id,
+      title: newFile.title,
+      todos: [],
+    };
+    setTodoLists((prev) => [...prev, list]);
+    setCurrentListId(newFile.id);
+    setCurrentDirectoryId(dirId);
   }
-  // --- UPDATED METHOD ---
+  function handleFileSelected(dirId: number, fileId: number) {
+    if (currentDirectoryId !== dirId) setCurrentDirectoryId(dirId);
+    if (currentListId !== fileId) setCurrentListId(fileId);
+  }
+
+  function addEmptyList() {
+    const list: TodoList = {
+      id: Date.now(),
+      title: "New List",
+      todos: [],
+    };
+    setTodoLists((prev) => [...prev, list]);
+    const file: FDFile = {
+      id: list.id,
+      title: list.title,
+    };
+    setDirectories((prevDirectories) =>
+      prevDirectories.map((dir) => {
+        // If this isn't the active directory we're adding a list to, leave it alone
+        if (dir.id !== currentDirectoryId) return dir;
+
+        // Return a fresh directory clone with the new file reference cleanly appended
+        return {
+          ...dir,
+          files: [...dir.files, file],
+        };
+      })
+    );
+    setCurrentListId(list.id);
+  }
   function handleTodoAdded(listId: number, task: string) {
-    // const newTodo: Todo = {
-    //   id: Date.now(),
-    //   task: task,
-    //   state: todo_state.Ready,
-    // };
-    // setTodoLists((prevLists) =>
-    //   prevLists.map((list, index) => {
-    //     if (index !== listId) return list;
-    //     return [...list, newTodo];
-    //   })
-    // );
+    // 1. Create the new optimistic Todo object using your imported types and state enum
+    const newTodo: Todo = {
+      id: Date.now(),
+      task: task,
+      state: todo_state.Ready,
+    };
+
+    // 2. Map through the lists to locate the target List ID and immutably append the item
+    setTodoLists((prevLists) =>
+      prevLists.map((list) => {
+        if (list.id !== listId) return list;
+        return {
+          ...list,
+          todos: [...list.todos, newTodo],
+        };
+      })
+    );
   }
   return (
     <div className="w-full h-full">
@@ -79,12 +121,18 @@ export default function TodoListApp(props: TodoListAppProps) {
             onTodoAdded={function (listId: number, task: string): void {
               handleTodoAdded(listId, task);
             }}
+            onNewList={() => {
+              addEmptyList();
+            }}
+            onCurrentListIdChanged={(id) => setCurrentListId(id)}
+            selectedFileId={currentListId}
           ></TodoListWorkSpace>
         }
         sideBarOpen={false}
         sideBar={
           <Explorer
             directories={directories}
+            selectedId={currentListId}
             onFileEdit={function (dirId: number, fileId: number): void {
               throw new Error("Function not implemented.");
             }}
@@ -102,6 +150,9 @@ export default function TodoListApp(props: TodoListAppProps) {
             }}
             onNewFile={(dirId, fileName) => {
               handleAddNewFile(dirId, fileName);
+            }}
+            onFileSelected={(dirId, fileId) => {
+              handleFileSelected(dirId, fileId);
             }}
           ></Explorer>
         }

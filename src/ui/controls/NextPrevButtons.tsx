@@ -15,7 +15,7 @@ export default function NextPrevButtons(props: NextPrevButtonsProps) {
         ◀
       </button>
       <span className="text-xs font-mono px-2 text-slate-400">
-        {props.currentIndex + 1} / {props.total}
+        {props.currentIndex + (props.total > 0 ? 1 : 0)} / {props.total}
       </span>
       <button
         onClick={props.onNext}

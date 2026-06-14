@@ -1,29 +1,19 @@
 "use client";
 import { useState } from "react";
+import Button from "./Button";
 
 interface GridToggleProps {
   onToggled: (state: boolean) => void;
+  active: boolean;
 }
 
-export default function GridToggle({ onToggled }: GridToggleProps) {
-  const [isGridActive, setIsGridActive] = useState(false);
-
-  const handleToggle = () => {
-    const nextState = !isGridActive;
-    setIsGridActive(nextState);
-    onToggled(nextState); // Broadcast the selection intent up to the parent workspace
-  };
-
+export default function GridToggle(props: GridToggleProps) {
   return (
-    <button
-      onClick={handleToggle}
-      type="button"
+    <Button
+      onClick={() => props.onToggled(props.active)}
       title="Toggle Grid View"
-      className={`p-2.5 rounded-lg border transition-all duration-200 ease-out flex items-center justify-center group ${
-        isGridActive
-          ? " border-emerald-500/40 text-emerald-400 shadow-md shadow-emerald-500/5"
-          : " border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700 hover:bg-slate-900/50"
-      }`}
+      active={props.active}
+      className={`transition-all duration-200 ease-out flex items-center justify-center group`}
     >
       {/* Custom SVG 4-Square Layout Icon */}
       <svg
@@ -45,6 +35,6 @@ export default function GridToggle({ onToggled }: GridToggleProps) {
         {/* Bottom-Right Square */}
         <rect x="14" y="14" width="7" height="7" rx="1" />
       </svg>
-    </button>
+    </Button>
   );
 }
