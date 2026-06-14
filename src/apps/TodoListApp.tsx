@@ -8,7 +8,7 @@ import {
 import TodoListWorkSpace from "../ui/todolist/TodoListWorkSpace";
 import Explorer from "../ui/flat-directory/Explorer";
 import { FDDirectory } from "@/src/core/flat-directory/directory";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Workspace from "../ui/layout/WorkSpace";
 import { FDFile } from "../core/flat-directory/file";
 
@@ -28,15 +28,24 @@ export default function TodoListApp(props: TodoListAppProps) {
     props.todoWorkSpace.id
   );
   const [currentListId, setCurrentListId] = useState(0);
+  const [title, setTitle] = useState(props.todoWorkSpace.title);
 
+  useEffect(() => {
+    const dir = directories.find((dir) => {
+      return dir.id === currentDirectoryId;
+    });
+    if (dir === undefined) return;
+    setTitle(dir.title);
+  }, [currentDirectoryId]);
   function handleAddDiretory(title: string) {
-    // //for now lets mock adding an empty directory
-    // const newDirectory: FDDirectory = {
-    //   id: Date.now(),
-    //   title: title,
-    //   files: [],
-    // };
-    // setDirectories((prev) => [...prev, newDirectory]);
+    const newDirectory: FDDirectory = {
+      id: Date.now(),
+      title: title,
+      files: [],
+    };
+    setDirectories((prev) => [...prev, newDirectory]);
+    setCurrentDirectoryId(newDirectory.id);
+    setCurrentListId(0);
   }
   function handleAddNewFile(dirId: number, fileName: string) {
     const newFile = {
@@ -113,7 +122,7 @@ export default function TodoListApp(props: TodoListAppProps) {
   return (
     <div className="w-full h-full">
       <Workspace
-        title={props.todoWorkSpace.title}
+        title={title}
         workspace={
           <TodoListWorkSpace
             id={props.todoWorkSpace.id}

@@ -6,6 +6,7 @@ import ExplorerMenuContext from "./ExplorerContext";
 import FileMenuContext from "./FileContext";
 import TextInput from "../controls/TextInput";
 import Scrim from "../controls/Scrim";
+import FolderSvg from "../svg/FolderSvg";
 
 interface ExplorerProps {
   directories: FDDirectory[];
@@ -75,7 +76,16 @@ export default function Explorer(props: ExplorerProps) {
           setExpMenuConfig({ x: e.clientX, y: e.clientY });
         }}
       >
-        <h1 className="px-2 py-1 text-sm">{"Explorer"}</h1>
+        <header className="w-full px-2 py-1 flex justify-between items-center">
+          <h1 className="text-sm">{"Explorer"}</h1>
+          <button
+            onClick={() => {
+              setEdit(true);
+            }}
+          >
+            <FolderSvg></FolderSvg>
+          </button>
+        </header>
         {props.directories.map((fd, index) => (
           <FileView
             key={index}
