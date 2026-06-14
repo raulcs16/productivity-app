@@ -7,20 +7,18 @@ interface NextPrevButtonsProps {
 }
 export default function NextPrevButtons(props: NextPrevButtonsProps) {
   return (
-    <div className="flex items-center gap-2 backdrop-blur p-1.5 rounded-xl border border-slate-700/50 shadow-lg z-50">
-      <button
-        onClick={props.onPrev}
-        className="px-3 py-1.5 text-xs font-semiboldx hover:bg-slate-600 active:scale-95 transition-all rounded-lg"
-      >
+    <div className="flex items-center rounded-xl border border-slate-700/50 shadow-lg p-2.5 gap-1.5 text-xs font-mono text-slate-400">
+      <button onClick={props.onPrev} className="text-lg">
         ◀
       </button>
-      <span className="text-xs font-mono px-2 text-slate-400">
-        {props.currentIndex + (props.total > 0 ? 1 : 0)} / {props.total}
-      </span>
-      <button
-        onClick={props.onNext}
-        className="px-3 py-1.5 text-xs font-semiboldx hover:bg-slate-600 active:scale-95 transition-all rounded-lg"
-      >
+      <p className="">
+        <span className="">
+          {props.currentIndex + (props.total > 0 ? 1 : 0)}
+        </span>
+        <span>/</span>
+        <span>{props.total}</span>
+      </p>
+      <button onClick={props.onNext} className="text-lg">
         ▶
       </button>
     </div>
