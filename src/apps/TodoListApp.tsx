@@ -117,7 +117,6 @@ export default function TodoListApp(props: TodoListAppProps) {
         workspace={
           <TodoListWorkSpace
             id={props.todoWorkSpace.id}
-            title={props.todoWorkSpace.title}
             lists={todoLists}
             onTodoAdded={function (listId: number, task: string): void {
               handleTodoAdded(listId, task);
