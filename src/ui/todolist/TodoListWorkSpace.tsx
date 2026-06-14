@@ -11,7 +11,6 @@ import Button from "../controls/Button";
 
 interface TodoListWorkSpaceProps {
   id: number;
-  title: string;
   lists: TodoList[];
   onTodoAdded: (listId: number, task: string) => void;
   onNewList: () => void;
@@ -70,10 +69,6 @@ export default function TodoListWorkSpace(props: TodoListWorkSpaceProps) {
   return (
     <div className=" text-white  flex flex-col justify-start w-full h-full overflow-clip">
       <header className="w-full px-8 py-2 mb-4 flex flex-col md:flex-row items-center justify-between shrink-0 gap-4">
-        <h1 className="font-extrabold text-2xl tracking-tight">
-          {props.title}
-        </h1>
-
         <div className="w-full flex items-center  justify-between md:justify-end gap-4">
           <GridToggle
             active={layout === 1}
@@ -81,25 +76,23 @@ export default function TodoListWorkSpace(props: TodoListWorkSpaceProps) {
               handleToggle(state);
             }}
           ></GridToggle>
-          <div className="w-fit flex gap-4">
-            <NextPrevButtons
-              total={totalLists}
-              currentIndex={currentIndex}
-              onNext={() => handleNext()}
-              onPrev={() => handlePrev()}
-            ></NextPrevButtons>
-            <Button
-              title="New List"
-              onClick={() => {
-                props.onNewList();
-                setAddNewListActive(false);
-                setCurrentIndex(totalLists);
-              }}
-              active={addNewListActive}
-            >
-              New List
-            </Button>
-          </div>
+          <NextPrevButtons
+            total={totalLists}
+            currentIndex={currentIndex}
+            onNext={() => handleNext()}
+            onPrev={() => handlePrev()}
+          ></NextPrevButtons>
+          <Button
+            title="New List"
+            onClick={() => {
+              props.onNewList();
+              setAddNewListActive(false);
+              setCurrentIndex(totalLists);
+            }}
+            active={addNewListActive}
+          >
+            New List
+          </Button>
         </div>
       </header>
       {layout === 0 ? (

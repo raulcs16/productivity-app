@@ -113,6 +113,7 @@ export default function TodoListApp(props: TodoListAppProps) {
   return (
     <div className="w-full h-full">
       <Workspace
+        title={props.todoWorkSpace.title}
         workspace={
           <TodoListWorkSpace
             id={props.todoWorkSpace.id}
