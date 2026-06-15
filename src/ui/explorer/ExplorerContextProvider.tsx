@@ -71,7 +71,20 @@ export function ExplorerContextProvider(props: ExplorerContextProps) {
           title: title,
           parentId: parentId,
         };
-        setNodes((prev) => [...prev, newNode]);
+        //if parentId == 0
+        if (parentId === 0) {
+          setNodes((prev) => [...prev, newNode]);
+        } else {
+          setNodes((prevNodes) => {
+            const parentIndex = prevNodes.findIndex(
+              (node) => node.id === parentId
+            );
+            if (parentIndex === -1) return [...prevNodes, newNode];
+            const left = prevNodes.slice(0, parentIndex + 1); // Includes the parent node
+            const right = prevNodes.slice(parentIndex + 1); // Everything below the parent
+            return [...left, newNode, ...right];
+          });
+        }
         setCurrentEditableId(newNode.id);
         setPendingId(newNode.id);
       },

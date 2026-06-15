@@ -1,4 +1,4 @@
-import { ExplorerType } from "@/src/core/explorer/explorer";
+import { ExplorerNode, ExplorerType } from "@/src/core/explorer/explorer";
 import DirectoryMenuContext from "./DirectoryMenuContext";
 import {
   useExplorerController,
@@ -12,6 +12,14 @@ import PopUp from "../cards/PopUp";
 import Button from "../controls/Button";
 
 interface ExplorerViewProps {}
+
+function getNodeDepth(node: ExplorerNode, allNodes: ExplorerNode[]): number {
+  if (!node.parentId || node.parentId === 0) return 0;
+  const parent = allNodes.find((n) => n.id === node.parentId);
+  if (!parent) return 0;
+  return 1 + getNodeDepth(parent, allNodes);
+}
+
 export default function ExplorerView(props: ExplorerViewProps) {
   const store = useExplorerStore();
   const controller = useExplorerController();
@@ -104,22 +112,27 @@ export default function ExplorerView(props: ExplorerViewProps) {
             <FolderSvg></FolderSvg>
           </button>
         </header>
-        {store.nodes.map((node, index) => (
-          <ExplorerDelegate
-            key={index}
-            id={node.id}
-            type={node.type}
-            title={node.title}
-            editable={store.currentEditableId === node.id}
-            selected={store.currentSelectionId === node.id}
-            onContextMenu={(id, x, y) =>
-              controller.openMenu(node.type, id, x, y)
-            }
-            onSelected={(id) => controller.selectNode(id)}
-            onRename={(id, title) => controller.rename(id, title)}
-            onCancelEdit={(id) => controller.cancelEdit(id)}
-          ></ExplorerDelegate>
-        ))}
+        {store.nodes.map((node, index) => {
+          const depth = getNodeDepth(node, store.nodes);
+          const style = { paddingLeft: `${depth * 16}px` };
+          return (
+            <ExplorerDelegate
+              key={index}
+              id={node.id}
+              type={node.type}
+              title={node.title}
+              style={style}
+              editable={store.currentEditableId === node.id}
+              selected={store.currentSelectionId === node.id}
+              onContextMenu={(id, x, y) =>
+                controller.openMenu(node.type, id, x, y)
+              }
+              onSelected={(id) => controller.selectNode(id)}
+              onRename={(id, title) => controller.rename(id, title)}
+              onCancelEdit={(id) => controller.cancelEdit(id)}
+            ></ExplorerDelegate>
+          );
+        })}
       </div>
     </>
   );

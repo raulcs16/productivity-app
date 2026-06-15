@@ -10,7 +10,7 @@ interface ExplorerDelegateProps {
   route?: string;
   editable: boolean;
   selected: boolean;
-
+  style?: React.CSSProperties;
   onContextMenu: (id: number, x: number, y: number) => void;
   onSelected: (id: number) => void;
   onRename: (id: number, title: string) => void;
@@ -18,9 +18,9 @@ interface ExplorerDelegateProps {
 }
 export default function ExplorerDelegate(props: ExplorerDelegateProps) {
   return props.editable ? (
-    <div className="w-full h-full px-2">
+    <div className="w-full px-2 ">
       <Scrim z={40} onClickedAway={() => props.onCancelEdit(props.id)}></Scrim>
-      <div className="relative z-50">
+      <div className="relative z-50" style={props.style}>
         <TextInput
           onEnter={(text) => {
             props.onRename(props.id, text);
@@ -53,7 +53,9 @@ export default function ExplorerDelegate(props: ExplorerDelegateProps) {
           props.onContextMenu(props.id, x, y);
         }}
       >
-        <p className="px-4 py-1 text-lg truncate max-w-[15ch]">{props.title}</p>
+        <p className="py-1 text-lg truncate max-w-[15ch]" style={props.style}>
+          {props.title}
+        </p>
       </ContextButton>
     </li>
   );
