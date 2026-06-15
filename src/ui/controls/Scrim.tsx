@@ -21,7 +21,7 @@ export default function Scrim(props: ScrimProps) {
     <>
       {/* 1. THE GIANT HITBOX BACKDROP */}
       <div
-        className="fixed inset-0 bg-transparent cursor-default select-none"
+        className="fixed inset-0 bg-[#00000001] cursor-default select-none"
         style={{ zIndex: props.z }}
         onClick={(e) => {
           e.stopPropagation(); // Stop the event trail

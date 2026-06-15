@@ -6,21 +6,17 @@ import {
   TodoWorkSpace,
 } from "@/src/core/todolist/todo";
 import TodoListWorkSpace from "../ui/todolist/TodoListWorkSpace";
-import Explorer from "../ui/flat-directory/Explorer";
-import { FDDirectory } from "@/src/core/flat-directory/directory";
 import { useEffect, useState } from "react";
 import Workspace from "../ui/layout/WorkSpace";
-import { FDFile } from "../core/flat-directory/file";
+import { ExplorerContextProvider } from "../ui/explorer/ExplorerContextProvider";
+import ExplorerView from "../ui/explorer/ExplorerView";
 
 interface TodoListAppProps {
-  directories: FDDirectory[];
+  // directories: FDDirectory[];
   todoWorkSpace: TodoWorkSpace;
 }
 
 export default function TodoListApp(props: TodoListAppProps) {
-  const [directories, setDirectories] = useState<FDDirectory[]>(
-    props.directories
-  );
   const [todoLists, setTodoLists] = useState<TodoList[]>(
     props.todoWorkSpace.lists
   );
@@ -30,21 +26,7 @@ export default function TodoListApp(props: TodoListAppProps) {
   const [currentListId, setCurrentListId] = useState(0);
   const [title, setTitle] = useState(props.todoWorkSpace.title);
 
-  useEffect(() => {
-    const dir = directories.find((dir) => {
-      return dir.id === currentDirectoryId;
-    });
-    if (dir === undefined) return;
-    setTitle(dir.title);
-  }, [currentDirectoryId]);
   function handleAddDiretory(title: string) {
-    const newDirectory: FDDirectory = {
-      id: Date.now(),
-      title: title,
-      files: [],
-    };
-    setDirectories((prev) => [...prev, newDirectory]);
-    setCurrentDirectoryId(newDirectory.id);
     setCurrentListId(0);
   }
   function handleAddNewFile(dirId: number, fileName: string) {
@@ -52,15 +34,6 @@ export default function TodoListApp(props: TodoListAppProps) {
       id: Date.now(), // Secure a unique timestamp identifier for mock tracking
       title: fileName,
     };
-    setDirectories((prevDirectories) =>
-      prevDirectories.map((dir) => {
-        if (dir.id !== dirId) return dir;
-        return {
-          ...dir,
-          files: [...dir.files, newFile],
-        };
-      })
-    );
     const list: TodoList = {
       id: newFile.id,
       title: newFile.title,
@@ -82,22 +55,6 @@ export default function TodoListApp(props: TodoListAppProps) {
       todos: [],
     };
     setTodoLists((prev) => [...prev, list]);
-    const file: FDFile = {
-      id: list.id,
-      title: list.title,
-    };
-    setDirectories((prevDirectories) =>
-      prevDirectories.map((dir) => {
-        // If this isn't the active directory we're adding a list to, leave it alone
-        if (dir.id !== currentDirectoryId) return dir;
-
-        // Return a fresh directory clone with the new file reference cleanly appended
-        return {
-          ...dir,
-          files: [...dir.files, file],
-        };
-      })
-    );
     setCurrentListId(list.id);
   }
   function handleTodoAdded(listId: number, task: string) {
@@ -139,31 +96,9 @@ export default function TodoListApp(props: TodoListAppProps) {
         }
         sideBarOpen={false}
         sideBar={
-          <Explorer
-            directories={directories}
-            selectedId={currentListId}
-            onFileEdit={function (dirId: number, fileId: number): void {
-              throw new Error("Function not implemented.");
-            }}
-            onFileDelete={function (dirId: number, fileId: number): void {
-              throw new Error("Function not implemented.");
-            }}
-            onDirEdit={function (dirId: number): void {
-              throw new Error("Function not implemented.");
-            }}
-            onDirAddFile={function (dirId: number): void {
-              throw new Error("Function not implemented.");
-            }}
-            onNewDirectory={(title: string) => {
-              handleAddDiretory(title);
-            }}
-            onNewFile={(dirId, fileName) => {
-              handleAddNewFile(dirId, fileName);
-            }}
-            onFileSelected={(dirId, fileId) => {
-              handleFileSelected(dirId, fileId);
-            }}
-          ></Explorer>
+          <ExplorerContextProvider initNodes={[]} initSelectedId={0}>
+            <ExplorerView></ExplorerView>
+          </ExplorerContextProvider>
         }
       ></Workspace>
     </div>
