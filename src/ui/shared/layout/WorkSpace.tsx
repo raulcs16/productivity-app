@@ -28,7 +28,7 @@ export default function Workspace(props: WorkspaceProps) {
             viewBox="0 0 24 24"
             stroke="currentColor"
             strokeWidth="2"
-            className="w-4 h-4"
+            className="w-5 h-5"
           >
             {/* Left Rectangle: Main Workspace (Always hollow) */}
             <rect x="3" y="3" width="11" height="18" rx="1.5" fill="none" />

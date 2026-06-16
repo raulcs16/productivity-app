@@ -65,14 +65,18 @@ export function TodoListContextProvider(props: TodoListContextProps) {
         );
     });
     const unsubSelected = appEventBus.on("explorer:nodeSelected", (node) => {
-      setCurrentListIndex(0);
+      let index = todolists.findIndex((list) => {
+        return list.id === node.id;
+      });
+      if (index === -1) index = 1;
+      setCurrentListIndex(index);
     });
     return () => {
       unsubCreate();
       unsubRename();
       unsubSelected();
     };
-  }, []);
+  }, [todolists]);
   const store: TodoListStore = {
     workspace,
     todolists,
