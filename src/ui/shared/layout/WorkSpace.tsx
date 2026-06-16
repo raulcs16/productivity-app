@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import Button from "../controls/Button";
 
 interface WorkspaceProps {
-  title: string;
+  title: React.ReactNode;
   workspace: React.ReactNode;
   sideBar: React.ReactNode;
   sideBarOpen: boolean;
@@ -17,7 +16,7 @@ export default function Workspace(props: WorkspaceProps) {
     <div className="w-full h-full pt-3">
       <div className="w-full h-5 flex justify-between px-3 items-center pb-3 border-b border-slate-800">
         <div></div>
-        <h1 className="font-extrabold text-xl tracking-tight">{props.title}</h1>
+        {props.title}
         <button
           onClick={() => {
             setSideBarOpen(!sideBarOpen);

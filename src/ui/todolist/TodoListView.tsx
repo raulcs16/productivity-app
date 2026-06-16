@@ -4,9 +4,9 @@ import TodoDelegate from "./TodoDelegate";
 import TextInput from "../shared/controls/TextInput";
 
 import {
-  useTodoListController,
-  useTodoListStore,
-} from "./TodoListContextProvider";
+  useTodoAppController,
+  useTodoAppStore,
+} from "@/src/apps/TodoApp/TodoAppContext";
 
 interface TodoListViewProps {
   id: number;
@@ -23,8 +23,8 @@ interface TodoListSectionProps {
 }
 
 export default function TodoListView(props: TodoListViewProps) {
-  const store = useTodoListStore();
-  const controller = useTodoListController();
+  const store = useTodoAppStore();
+  const controller = useTodoAppController();
   const todos = store.todos.filter((todo) => todo.listId == props.id);
   return (
     <div className="w-full h-full flex flex-col overflow-hidden p-2">
@@ -35,7 +35,7 @@ export default function TodoListView(props: TodoListViewProps) {
         <TextInput
           onChange={(text) => {}}
           onEnter={(text) => {
-            controller.addTodo(props.id, text);
+            // controller.addTodo(props.id, text);
           }}
           placeHolder="Add Todo's"
         />
@@ -47,7 +47,7 @@ export default function TodoListView(props: TodoListViewProps) {
           textColor="#3b82f6"
           todos={todos.filter((todo) => todo.state === TodoState.Ready)}
           onItemDoubleClicked={(todoId) => {
-            controller.updateTodoState(todoId);
+            // controller.updateTodoState(todoId);
           }}
         />
 
@@ -58,7 +58,7 @@ export default function TodoListView(props: TodoListViewProps) {
           isFocused={true} // Triggers special emphasis styling
           todos={todos.filter((todo) => todo.state === TodoState.Started)}
           onItemDoubleClicked={(todoId) => {
-            controller.updateTodoState(todoId);
+            // controller.updateTodoState(todoId);
           }}
         />
 
@@ -68,14 +68,10 @@ export default function TodoListView(props: TodoListViewProps) {
           textColor="#64748b"
           todos={todos.filter((todo) => todo.state === TodoState.Scheduled)}
           onItemDoubleClicked={(todoId) => {
-            controller.updateTodoState(todoId);
+            // controller.updateTodoState(todoId);
           }}
         />
 
-        {/* HISTORICAL / FOOTER SECTIONS:
-            Moved inside the scrollable view region so they stay properly styled 
-            at the bottom of the content track without forcing layout-breaking issues.
-        */}
         <div className="mt-8 pt-6 border-t border-slate-700/40 space-y-4">
           <TodoListSection
             id={props.id}
@@ -83,7 +79,7 @@ export default function TodoListView(props: TodoListViewProps) {
             textColor="#10b981"
             todos={todos.filter((todo) => todo.state === TodoState.Completed)}
             onItemDoubleClicked={(todoId) => {
-              controller.updateTodoState(todoId);
+              // controller.updateTodoState(todoId);
             }}
           />
           <TodoListSection
@@ -92,7 +88,7 @@ export default function TodoListView(props: TodoListViewProps) {
             textColor="#94a3b8"
             todos={todos.filter((todo) => todo.state === TodoState.Archived)}
             onItemDoubleClicked={(todoId) => {
-              controller.updateTodoState(todoId);
+              // controller.updateTodoState(todoId);
             }}
           />
         </div>

@@ -1,17 +1,25 @@
 import { ExplorerNode, ExplorerType } from "@/src/core/explorer/explorer";
 import DirectoryMenuContext from "./DirectoryMenuContext";
-import {
-  useExplorerController,
-  useExplorerStore,
-} from "./ExplorerContextProvider";
+
 import ExplorerMenuContext from "./ExplorerMenuContext";
 import FileMenuContext from "./FileMenuContext";
 import FolderSvg from "../shared/svg/FolderSvg";
 import ExplorerDelegate from "./ExplorerDelegate";
 import PopUp from "../shared/cards/PopUp";
 import Button from "../shared/controls/Button";
+import { useState } from "react";
 
-interface ExplorerViewProps {}
+interface ExplorerViewProps {
+  explorerNodes: ExplorerNode[];
+  selectedId: number;
+  editableId: number;
+
+  onNodeSelected: (id: number) => void;
+  onNodeRenamed: (id: number, title: string) => void;
+  onNodeDelete: (id: number) => void;
+  onNodeAdded: (type: ExplorerType, title: string, parentId: number) => void;
+  onSetEditId: (id: number) => void;
+}
 
 function getNodeDepth(node: ExplorerNode, allNodes: ExplorerNode[]): number {
   if (!node.parentId || node.parentId === 0) return 0;
@@ -21,77 +29,83 @@ function getNodeDepth(node: ExplorerNode, allNodes: ExplorerNode[]): number {
 }
 
 export default function ExplorerView(props: ExplorerViewProps) {
-  const store = useExplorerStore();
-  const controller = useExplorerController();
+  const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [activeMenu, setActiveMenu] = useState<{
+    type: "Explorer" | "Container" | "Item";
+    id: number;
+    x: number;
+    y: number;
+  } | null>(null);
   return (
     <>
-      <PopUp
-        visible={store.nodeToDelete !== null}
-        onClickedAway={() => controller.cancelDelete()}
-      >
+      <PopUp visible={!deleteId === null} onClickedAway={() => {}}>
         <div className="flex items-center flex-col gap-4">
           <p>Delete File ? </p>
           <div className="flex gap-4">
             <Button
               active={true}
-              title="Cancel"
-              onClick={() => controller.confirmDelete()}
+              title="Confirm"
+              onClick={() => {
+                if (deleteId) props.onNodeDelete(deleteId);
+              }}
             >
               <p className="w-[5ch]">Yes</p>
             </Button>
             <Button
               active={true}
               title="Cancel"
-              onClick={() => controller.cancelDelete()}
+              onClick={() => {
+                setDeleteId(null);
+              }}
             >
               <p className="w-[5ch]">No</p>
             </Button>
           </div>
         </div>
       </PopUp>
-      {store.activeMenu?.type === ExplorerType.Item && (
+      {activeMenu?.type === "Item" && (
         <FileMenuContext
-          id={store.activeMenu.id}
-          x={store.activeMenu.x}
-          y={store.activeMenu.y}
+          id={activeMenu.id}
+          x={activeMenu.x}
+          y={activeMenu.y}
           open={true}
           onDelete={(id) => {
-            controller.setDeleteId(id);
-            controller.closeMenu();
+            setDeleteId(id);
+            setActiveMenu(null);
           }}
           onRename={(id) => {
-            controller.setEditableId(id);
-            controller.closeMenu();
+            props.onSetEditId(id);
+            setActiveMenu(null);
           }}
-          onClose={() => controller.closeMenu()}
+          onClose={() => setActiveMenu(null)}
         ></FileMenuContext>
       )}
-      {store.activeMenu?.type === ExplorerType.Container && (
+      {activeMenu?.type === "Container" && (
         <DirectoryMenuContext
-          directoryId={store.activeMenu.id}
-          x={store.activeMenu.x}
-          y={store.activeMenu.y}
+          directoryId={activeMenu.id}
+          x={activeMenu.x}
+          y={activeMenu.y}
           open={true}
           onAddFile={(directoyId: number) => {
-            controller.addNode(ExplorerType.Item, "new fille", directoyId);
-            controller.closeMenu();
+            props.onNodeAdded(ExplorerType.Item, "newFile", directoyId);
+            setActiveMenu(null);
           }}
           onRename={(directoryId) => {
-            controller.setEditableId(directoryId);
-            controller.closeMenu();
+            props.onSetEditId(directoryId);
+            setActiveMenu(null);
           }}
-          onClose={() => controller.closeMenu()}
+          onClose={() => setActiveMenu(null)}
         ></DirectoryMenuContext>
       )}
-      {store.activeMenu?.type === "Explorer" && (
+      {activeMenu?.type === "Explorer" && (
         <ExplorerMenuContext
-          x={store.activeMenu.x}
-          y={store.activeMenu.y}
+          x={activeMenu.x}
+          y={activeMenu.y}
           open={true}
-          onClose={() => controller.closeMenu()}
+          onClose={() => setActiveMenu(null)}
           onAddWorkSpace={() => {
-            controller.addNode(ExplorerType.Container, "new directory", 0);
-            controller.closeMenu();
+            props.onNodeAdded(ExplorerType.Container, "new directory", 0);
+            setActiveMenu(null);
           }}
         ></ExplorerMenuContext>
       )}
@@ -99,40 +113,84 @@ export default function ExplorerView(props: ExplorerViewProps) {
         className="w-full h-full pb-5 overflow-auto"
         onContextMenu={(e) => {
           e.preventDefault();
-          controller.openMenu("Explorer", 0, e.clientX, e.clientY);
+          // controller.openMenu("Explorer", 0, e.clientX, e.clientY);
         }}
       >
         <header className="w-full px-2 py-1 flex justify-between items-center">
           <h1 className="text-sm">{"Explorer"}</h1>
           <button
             onClick={() => {
-              controller.addNode(ExplorerType.Container, "new directory", 0);
+              props.onNodeAdded(ExplorerType.Container, "new directory", 0);
             }}
           >
             <FolderSvg></FolderSvg>
           </button>
         </header>
-        {store.nodes.map((node, index) => {
-          const depth = getNodeDepth(node, store.nodes);
-          const style = { paddingLeft: `${depth * 16}px` };
-          return (
-            <ExplorerDelegate
-              key={index}
-              id={node.id}
-              type={node.type}
-              title={node.title}
-              style={style}
-              editable={store.currentEditableId === node.id}
-              selected={store.currentSelectionId === node.id}
-              onContextMenu={(id, x, y) =>
-                controller.openMenu(node.type, id, x, y)
-              }
-              onSelected={(id) => controller.selectNode(id)}
-              onRename={(id, title) => controller.rename(id, title)}
-              onCancelEdit={(id) => controller.cancelEdit(id)}
-            ></ExplorerDelegate>
-          );
-        })}
+        {props.explorerNodes
+          .filter((node) => node.parentId === 0)
+          .map((node, index) => {
+            const parentDepth = getNodeDepth(node, props.explorerNodes);
+            const parentStyle = { paddingLeft: `${parentDepth * 16}px` };
+
+            const children = props.explorerNodes.filter(
+              (child) => child.parentId === node.id
+            );
+
+            return (
+              <div key={node.id || index}>
+                <ExplorerDelegate
+                  id={node.id}
+                  type={node.type}
+                  title={node.title}
+                  style={parentStyle}
+                  editable={props.editableId === node.id}
+                  selected={props.selectedId === node.id}
+                  onContextMenu={(id, x, y) => {
+                    const type =
+                      node.type === ExplorerType.Container
+                        ? "Container"
+                        : "Item";
+                    setActiveMenu({ type, id, x, y });
+                  }}
+                  onSelected={(id) => props.onNodeSelected(id)}
+                  onRename={(id, title) => props.onNodeRenamed(id, title)}
+                  onCancelEdit={() => props.onSetEditId(-1)} // 💡 Fix 5: Graceful exit
+                />
+
+                {/* NESTED CHILD NODES */}
+                {children.map((childNode, childIndex) => {
+                  // 💡 Fix 4: Calculate child node depth separately from the parent layout
+                  const childDepth = getNodeDepth(
+                    childNode,
+                    props.explorerNodes
+                  );
+                  const childStyle = { paddingLeft: `${childDepth * 16}px` };
+
+                  return (
+                    <ExplorerDelegate
+                      key={childNode.id || childIndex}
+                      id={childNode.id}
+                      type={childNode.type}
+                      title={childNode.title}
+                      style={childStyle}
+                      editable={props.editableId === childNode.id}
+                      selected={props.selectedId === childNode.id}
+                      onContextMenu={(id, x, y) => {
+                        const type =
+                          childNode.type === ExplorerType.Container
+                            ? "Container"
+                            : "Item";
+                        setActiveMenu({ type, id, x, y });
+                      }}
+                      onSelected={(id) => props.onNodeSelected(id)}
+                      onRename={(id, title) => props.onNodeRenamed(id, title)}
+                      onCancelEdit={() => props.onSetEditId(-1)}
+                    />
+                  );
+                })}
+              </div>
+            );
+          })}
       </div>
     </>
   );

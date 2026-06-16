@@ -9,22 +9,21 @@ import Grid from "../shared/views/Grid";
 import GridToggle from "../shared/controls/GridToggle";
 import Button from "../shared/controls/Button";
 import {
-  useTodoListController,
-  useTodoListStore,
-} from "./TodoListContextProvider";
-
+  useTodoAppController,
+  useTodoAppStore,
+} from "@/src/apps/TodoApp/TodoAppContext";
 interface TodoListWorkSpaceProps {}
 
 export default function TodoListWorkSpace(props: TodoListWorkSpaceProps) {
-  const store = useTodoListStore();
-  const controller = useTodoListController();
+  const store = useTodoAppStore();
+  const controller = useTodoAppController();
   const [layout, setLayout] = useState(0); //0 for slide, 1 for grid select
 
   const [addNewListActive, setAddNewListActive] = useState(false);
   const totalLists = store.todolists.length;
 
   function scrollToBoard(index: number) {
-    controller.updateListIndex(index);
+    controller.setCurrentListIndex(index);
     if (layout !== 0) setLayout(0);
   }
 
@@ -47,7 +46,6 @@ export default function TodoListWorkSpace(props: TodoListWorkSpaceProps) {
   }
   function handleToggle(state: boolean) {
     if (!state) {
-      console.log(state);
       if (layout === 1) return;
       setLayout(1);
     }
@@ -76,7 +74,7 @@ export default function TodoListWorkSpace(props: TodoListWorkSpaceProps) {
           <Button
             title="New List"
             onClick={() => {
-              controller.addList("new list");
+              controller.addList("new list", store.currentWorkSpaceId);
               setAddNewListActive(false);
             }}
             active={addNewListActive}
