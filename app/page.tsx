@@ -4,7 +4,6 @@ import { TodoWorkSpace } from "@/src/core/todolist/todo";
 const workspace: TodoWorkSpace = {
   id: 0,
   title: "Work",
-  lists: [],
 };
 export default function Home() {
   return (
