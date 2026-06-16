@@ -1,6 +1,6 @@
 "use client";
 
-import ContextMenu, { ContextMenuItem } from "../controls/ContextMenu";
+import ContextMenu, { ContextMenuItem } from "../shared/controls/ContextMenu";
 
 interface DirectoryMenuContextProps {
   directoryId: number;

@@ -1,4 +1,4 @@
-export enum todo_state {
+export enum TodoState {
   Scheduled,
   Ready,
   Started,
@@ -8,17 +8,17 @@ export enum todo_state {
 
 export type Todo = {
   id: number;
-  state: todo_state;
+  state: TodoState;
   task: string;
+  listId: number;
 };
 
 export type TodoList = {
   id: number;
   title: string;
-  todos: Todo[];
+  workSpaceId: number;
 };
 export type TodoWorkSpace = {
   id: number;
   title: string;
-  lists: TodoList[];
 };

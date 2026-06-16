@@ -1,57 +1,48 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
 import { Todo, TodoList } from "@/src/core/todolist/todo";
-import HoverCard from "../cards/HoverCard";
+import HoverCard from "@/src/ui/shared/cards/HoverCard";
 import TodoListView from "./TodoListView";
-import NextPrevButtons from "../controls/NextPrevButtons";
-import SlideOver from "../views/SlideOver";
-import Grid from "../views/Grid";
-import GridToggle from "../controls/GridToggle";
-import Button from "../controls/Button";
+import NextPrevButtons from "../shared/controls/NextPrevButtons";
+import SlideOver from "../shared/views/SlideOver";
+import Grid from "../shared/views/Grid";
+import GridToggle from "../shared/controls/GridToggle";
+import Button from "../shared/controls/Button";
+import {
+  useTodoListController,
+  useTodoListStore,
+} from "./TodoListContextProvider";
 
-interface TodoListWorkSpaceProps {
-  id: number;
-  lists: TodoList[];
-  onTodoAdded: (listId: number, task: string) => void;
-  onNewList: () => void;
-  onCurrentListIdChanged: (listId: number) => void;
-  selectedFileId: number;
-}
+interface TodoListWorkSpaceProps {}
 
 export default function TodoListWorkSpace(props: TodoListWorkSpaceProps) {
+  const store = useTodoListStore();
+  const controller = useTodoListController();
   const [layout, setLayout] = useState(0); //0 for slide, 1 for grid select
-  const [currentIndex, setCurrentIndex] = useState(() => {
-    const index = props.lists.findIndex(
-      (list) => list.id === props.selectedFileId
-    );
-    return index !== -1 ? index : 0;
-  });
+
   const [addNewListActive, setAddNewListActive] = useState(false);
-  const totalLists = props.lists.length;
-  useEffect(() => {
-    const index = props.lists.findIndex(
-      (list) => list.id === props.selectedFileId
-    );
-    if (index !== -1) {
-      setCurrentIndex(index);
-    }
-  }, [props.selectedFileId, props.lists]);
+  const totalLists = store.todolists.length;
+
   function scrollToBoard(index: number) {
-    if (index === currentIndex) return;
-    setCurrentIndex(index);
+    controller.updateListIndex(index);
     if (layout !== 0) setLayout(0);
-    props.onCurrentListIdChanged(props.lists[index].id);
   }
 
   function handlePrev() {
     if (totalLists == 0) return;
-    const nextIndex = currentIndex === 0 ? totalLists - 1 : currentIndex - 1;
+    const nextIndex =
+      store.currentListIndex === 0
+        ? totalLists - 1
+        : store.currentListIndex - 1;
     scrollToBoard(nextIndex);
   }
 
   function handleNext() {
     if (totalLists == 0) return;
-    const nextIndex = currentIndex === totalLists - 1 ? 0 : currentIndex + 1;
+    const nextIndex =
+      store.currentListIndex === totalLists - 1
+        ? 0
+        : store.currentListIndex + 1;
     scrollToBoard(nextIndex);
   }
   function handleToggle(state: boolean) {
@@ -78,16 +69,15 @@ export default function TodoListWorkSpace(props: TodoListWorkSpaceProps) {
           ></GridToggle>
           <NextPrevButtons
             total={totalLists}
-            currentIndex={currentIndex}
+            currentIndex={store.currentListIndex}
             onNext={() => handleNext()}
             onPrev={() => handlePrev()}
           ></NextPrevButtons>
           <Button
             title="New List"
             onClick={() => {
-              props.onNewList();
+              controller.addList("new list");
               setAddNewListActive(false);
-              setCurrentIndex(totalLists);
             }}
             active={addNewListActive}
           >
@@ -97,8 +87,8 @@ export default function TodoListWorkSpace(props: TodoListWorkSpaceProps) {
       </header>
       {layout === 0 ? (
         <SlideOver
-          items={props.lists}
-          currentIndex={currentIndex}
+          items={store.todolists}
+          currentIndex={store.currentListIndex}
           onIntentIndexChanged={(index) => {
             scrollToBoard(index);
           }}
@@ -110,24 +100,14 @@ export default function TodoListWorkSpace(props: TodoListWorkSpaceProps) {
                 scrollToBoard(index);
               }}
             >
-              <TodoListView
-                id={todolist.id}
-                title={todolist.title}
-                todos={todolist.todos}
-                onItemDoubleClicked={(id, state, lId) =>
-                  console.log("Task click:", id)
-                }
-                onTodoAdded={(task: string) =>
-                  props.onTodoAdded(todolist.id, task)
-                }
-              />
+              <TodoListView id={todolist.id} title={todolist.title} />
             </HoverCard>
           )}
         ></SlideOver>
       ) : (
         <Grid
-          items={props.lists}
-          currentIndex={currentIndex}
+          items={store.todolists}
+          currentIndex={store.currentListIndex}
           onItemClicked={(index) => {
             scrollToBoard(index);
           }}
@@ -136,11 +116,6 @@ export default function TodoListWorkSpace(props: TodoListWorkSpaceProps) {
               <TodoListView
                 id={todolist.id}
                 title={todolist.title}
-                todos={todolist.todos}
-                onItemDoubleClicked={(id) => {
-                  console.log("task click");
-                }}
-                onTodoAdded={(task: string) => {}}
               ></TodoListView>
             </HoverCard>
           )}

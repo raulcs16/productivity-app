@@ -1,7 +1,7 @@
 import { ExplorerType } from "@/src/core/explorer/explorer";
-import ContextButton from "../controls/ContextButton";
-import TextInput from "../controls/TextInput";
-import Scrim from "../controls/Scrim";
+import ContextButton from "../shared/controls/ContextButton";
+import TextInput from "../shared/controls/TextInput";
+import Scrim from "../shared/controls/Scrim";
 
 interface ExplorerDelegateProps {
   id: number;

@@ -1,18 +1,16 @@
 "use client";
-import { Todo, todo_state } from "@/src/core/todolist/todo";
+import { Todo, TodoState } from "@/src/core/todolist/todo";
 import TodoDelegate from "./TodoDelegate";
-import TextInput from "../controls/TextInput";
+import TextInput from "../shared/controls/TextInput";
+
+import {
+  useTodoListController,
+  useTodoListStore,
+} from "./TodoListContextProvider";
 
 interface TodoListViewProps {
-  onItemDoubleClicked: (
-    todoId: number,
-    todoState: todo_state,
-    listId: number
-  ) => void;
   id: number;
   title: string;
-  todos: Todo[];
-  onTodoAdded: (task: string) => void;
 }
 
 interface TodoListSectionProps {
@@ -20,15 +18,14 @@ interface TodoListSectionProps {
   title: string;
   textColor: string;
   todos: Todo[];
-  onItemDoubleClicked: (
-    todoId: number,
-    todoState: todo_state,
-    listId: number
-  ) => void;
+  onItemDoubleClicked: (todoId: number) => void;
   isFocused?: boolean; // New prop to spotlight "Started"
 }
 
 export default function TodoListView(props: TodoListViewProps) {
+  const store = useTodoListStore();
+  const controller = useTodoListController();
+  const todos = store.todos.filter((todo) => todo.listId == props.id);
   return (
     <div className="w-full h-full flex flex-col overflow-hidden p-2">
       <header className="mb-6 pb-4 space-y-3 border-b shrink-0  py-2 w-full">
@@ -38,7 +35,7 @@ export default function TodoListView(props: TodoListViewProps) {
         <TextInput
           onChange={(text) => {}}
           onEnter={(text) => {
-            props.onTodoAdded(text);
+            controller.addTodo(props.id, text);
           }}
           placeHolder="Add Todo's"
         />
@@ -48,8 +45,10 @@ export default function TodoListView(props: TodoListViewProps) {
           id={props.id}
           title="To Do"
           textColor="#3b82f6"
-          todos={props.todos.filter((todo) => todo.state === todo_state.Ready)}
-          onItemDoubleClicked={props.onItemDoubleClicked}
+          todos={todos.filter((todo) => todo.state === TodoState.Ready)}
+          onItemDoubleClicked={(todoId) => {
+            controller.updateTodoState(todoId);
+          }}
         />
 
         <TodoListSection
@@ -57,20 +56,20 @@ export default function TodoListView(props: TodoListViewProps) {
           title="In Progress"
           textColor="#f59e0b"
           isFocused={true} // Triggers special emphasis styling
-          todos={props.todos.filter(
-            (todo) => todo.state === todo_state.Started
-          )}
-          onItemDoubleClicked={props.onItemDoubleClicked}
+          todos={todos.filter((todo) => todo.state === TodoState.Started)}
+          onItemDoubleClicked={(todoId) => {
+            controller.updateTodoState(todoId);
+          }}
         />
 
         <TodoListSection
           id={props.id}
           title="Scheduled"
           textColor="#64748b"
-          todos={props.todos.filter(
-            (todo) => todo.state === todo_state.Scheduled
-          )}
-          onItemDoubleClicked={props.onItemDoubleClicked}
+          todos={todos.filter((todo) => todo.state === TodoState.Scheduled)}
+          onItemDoubleClicked={(todoId) => {
+            controller.updateTodoState(todoId);
+          }}
         />
 
         {/* HISTORICAL / FOOTER SECTIONS:
@@ -82,19 +81,19 @@ export default function TodoListView(props: TodoListViewProps) {
             id={props.id}
             title="Completed"
             textColor="#10b981"
-            todos={props.todos.filter(
-              (todo) => todo.state === todo_state.Completed
-            )}
-            onItemDoubleClicked={props.onItemDoubleClicked}
+            todos={todos.filter((todo) => todo.state === TodoState.Completed)}
+            onItemDoubleClicked={(todoId) => {
+              controller.updateTodoState(todoId);
+            }}
           />
           <TodoListSection
             id={props.id}
             title="Archived"
             textColor="#94a3b8"
-            todos={props.todos.filter(
-              (todo) => todo.state === todo_state.Archived
-            )}
-            onItemDoubleClicked={props.onItemDoubleClicked}
+            todos={todos.filter((todo) => todo.state === TodoState.Archived)}
+            onItemDoubleClicked={(todoId) => {
+              controller.updateTodoState(todoId);
+            }}
           />
         </div>
       </div>
@@ -136,9 +135,7 @@ function TodoListSection(props: TodoListSectionProps) {
               id={todo.id}
               task={todo.task}
               state={todo.state}
-              onDoubleClicked={(todoId, state) =>
-                props.onItemDoubleClicked(todoId, state, props.id)
-              }
+              onDoubleClicked={(todoId) => props.onItemDoubleClicked(todoId)}
             />
           ))}
         </ol>

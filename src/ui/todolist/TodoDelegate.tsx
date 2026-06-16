@@ -1,19 +1,19 @@
 "use client";
-import { todo_state } from "@/src/core/todolist/todo";
+import { TodoState } from "@/src/core/todolist/todo";
 interface TodoDelegateProps {
-  onDoubleClicked: (id: number, state: todo_state) => void;
+  onDoubleClicked: (id: number, state: TodoState) => void;
   id: number;
-  state: todo_state;
+  state: TodoState;
   task: string;
 }
 
 // 1. Create a dictionary that maps each enum state to its specific Tailwind styles
-const textStyleMap: Record<todo_state, string> = {
-  [todo_state.Scheduled]: "text-slate-600 font-normal",
-  [todo_state.Ready]: "text-blue-700 font-medium",
-  [todo_state.Started]: "text-amber-700 font-semibold animate-pulse", // Subtly pulses to show active work
-  [todo_state.Completed]: "text-emerald-600 line-through opacity-70", // Strike-through and slightly faded
-  [todo_state.Archived]: "text-slate-400 italic opacity-50", // Heavily faded and italicized
+const textStyleMap: Record<TodoState, string> = {
+  [TodoState.Scheduled]: "text-slate-600 font-normal",
+  [TodoState.Ready]: "text-blue-700 font-medium",
+  [TodoState.Started]: "text-amber-700 font-semibold animate-pulse", // Subtly pulses to show active work
+  [TodoState.Completed]: "text-emerald-600 line-through opacity-70", // Strike-through and slightly faded
+  [TodoState.Archived]: "text-slate-400 italic opacity-50", // Heavily faded and italicized
 };
 
 export default function TodoDelegate(props: TodoDelegateProps) {

@@ -6,10 +6,10 @@ import {
 } from "./ExplorerContextProvider";
 import ExplorerMenuContext from "./ExplorerMenuContext";
 import FileMenuContext from "./FileMenuContext";
-import FolderSvg from "../svg/FolderSvg";
+import FolderSvg from "../shared/svg/FolderSvg";
 import ExplorerDelegate from "./ExplorerDelegate";
-import PopUp from "../cards/PopUp";
-import Button from "../controls/Button";
+import PopUp from "../shared/cards/PopUp";
+import Button from "../shared/controls/Button";
 
 interface ExplorerViewProps {}
 

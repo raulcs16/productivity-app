@@ -1,7 +1,7 @@
 "use client";
 
 import { propagateServerField } from "next/dist/server/lib/render-server";
-import ContextMenu, { ContextMenuItem } from "../controls/ContextMenu";
+import ContextMenu, { ContextMenuItem } from "../shared/controls/ContextMenu";
 
 interface FileMenuContextProps {
   id: number;

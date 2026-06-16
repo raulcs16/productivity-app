@@ -1,4 +1,5 @@
 "use client";
+import { appEventBus } from "@/src/core/events/EventBus";
 import { ExplorerNode, ExplorerType } from "@/src/core/explorer/explorer";
 import React, { createContext, useContext, useMemo, useState } from "react";
 
@@ -60,7 +61,22 @@ export function ExplorerContextProvider(props: ExplorerContextProps) {
     activeMenu,
     nodeToDelete,
   };
-
+  React.useEffect(() => {
+    const unsubCreate = appEventBus.on("todo:listCreated", (list) => {
+      setNodes((prev) => [
+        ...prev,
+        {
+          id: list.id, // Match IDs perfectly so they map together in views
+          title: list.title,
+          parentId: list.workspaceId,
+          type: ExplorerType.Item,
+        },
+      ]);
+    });
+    return () => {
+      unsubCreate();
+    };
+  }, []);
   //use memo to ensure the controller ref never changes, prvent unecessary UI renders
   const controller: ExplorerController = useMemo(
     () => ({
@@ -87,6 +103,12 @@ export function ExplorerContextProvider(props: ExplorerContextProps) {
         }
         setCurrentEditableId(newNode.id);
         setPendingId(newNode.id);
+        appEventBus.emit("explorer:nodeCreated", {
+          id: newNode.id,
+          title: newNode.title,
+          type: type === ExplorerType.Container ? "Container" : "Item",
+          parentId: parentId,
+        });
       },
       setEditableId: (id: number) => {
         setCurrentEditableId(id);
@@ -103,11 +125,22 @@ export function ExplorerContextProvider(props: ExplorerContextProps) {
         setNodeToDelete(null);
       },
       rename: (id: number, title: string) => {
+        let capturedType: ExplorerType | undefined;
         setNodes((prevNodes) =>
-          prevNodes.map((node) => (node.id !== id ? node : { ...node, title }))
+          prevNodes.map((node) => {
+            if (node.id !== id) return node;
+            capturedType = node.type;
+            return { ...node, title };
+          })
         );
         setCurrentEditableId(-1);
         setPendingId(-1);
+        if (capturedType === undefined) return;
+        appEventBus.emit("explorer:nodeRenamed", {
+          id: id,
+          type: capturedType === ExplorerType.Container ? "Container" : "Item",
+          title: title,
+        });
       },
       cancelEdit: (id: number) => {
         if (pendingId === id) {
@@ -118,6 +151,9 @@ export function ExplorerContextProvider(props: ExplorerContextProps) {
       },
       selectNode: (id: number) => {
         setSelectionId(id);
+        appEventBus.emit("explorer:nodeSelected", {
+          id: id,
+        });
       },
       openMenu: (type, id, x, y) => {
         setActiveMenu({ type, id, x, y });

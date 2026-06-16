@@ -1,7 +1,7 @@
 "use client";
 
-import ContextMenu, { ContextMenuItem } from "../controls/ContextMenu";
-import FolderSvg from "../svg/FolderSvg";
+import ContextMenu, { ContextMenuItem } from "../shared/controls/ContextMenu";
+import FolderSvg from "../shared/svg/FolderSvg";
 
 interface ExplorerMenuContextProps {
   x: number;
