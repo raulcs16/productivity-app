@@ -35,7 +35,7 @@ export default function ExplorerDelegate(props: ExplorerDelegateProps) {
     </div>
   ) : (
     <li
-      className={` w-full hover:bg-[#FFFFFF01] cursor-pointer px-3 ${
+      className={` w-full hover:bg-[#FFFFFF11] cursor-pointer px-3 ${
         props.selected && "bg-[#FFFFFF11]"
       } ${props.type === ExplorerType.Container && "font-bold text-blue-400"}`}
       onClick={() => {
