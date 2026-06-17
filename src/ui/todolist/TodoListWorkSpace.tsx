@@ -52,33 +52,24 @@ export default function TodoListWorkSpace(props: TodoListWorkSpaceProps) {
   return (
     <div className="relative text-white  flex flex-col justify-start w-full h-full overflow-clip">
       {props.layout === LayoutType.Slide ? (
-        <section>
-          <SlideOver
-            items={store.todolists}
-            currentIndex={store.currentListIndex}
-            onIntentIndexChanged={(index) => {
-              scrollToBoard(index);
-            }}
-            renderItem={(todolist, index, isFocused) => (
-              <HoverCard
-                index={index}
-                className="h-full"
-                onClicked={(index) => {
-                  scrollToBoard(index);
-                }}
-              >
-                <TodoListView id={todolist.id} title={todolist.title} />
-              </HoverCard>
-            )}
-          ></SlideOver>
-          <div className="absolute w-1/2 flex items-center justify-center px-10 py-1 mx-auto bottom-10 left-1/2 -translate-x-1/2">
-            <DotNavigation
-              total={totalLists}
-              currentIndex={store.currentListIndex}
-              onIndexSelect={(index) => scrollToBoard(index)}
-            ></DotNavigation>
-          </div>
-        </section>
+        <SlideOver
+          items={store.todolists}
+          currentIndex={store.currentListIndex}
+          onIntentIndexChanged={(index) => {
+            scrollToBoard(index);
+          }}
+          renderItem={(todolist, index, isFocused) => (
+            <HoverCard
+              index={index}
+              className="h-full"
+              onClicked={(index) => {
+                scrollToBoard(index);
+              }}
+            >
+              <TodoListView id={todolist.id} title={todolist.title} />
+            </HoverCard>
+          )}
+        ></SlideOver>
       ) : (
         <Grid
           items={store.todolists}
@@ -99,7 +90,14 @@ export default function TodoListWorkSpace(props: TodoListWorkSpaceProps) {
           )}
         ></Grid>
       )}
-      <div className="absolute right-12 bottom-15 z-20">
+      <div className="absolute w-1/2 flex items-center justify-center px-10 py-1 mx-auto bottom-2 left-1/2 -translate-x-1/2">
+        <DotNavigation
+          total={totalLists}
+          currentIndex={store.currentListIndex}
+          onIndexSelect={(index) => scrollToBoard(index)}
+        ></DotNavigation>
+      </div>
+      <div className="absolute right-12 bottom-2 z-20">
         <button
           title="New List"
           className="flex items-center justify-center h-12 w-12 rounded-xl 
