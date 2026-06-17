@@ -8,7 +8,7 @@ const workspace: TodoWorkSpace = {
 };
 export default function Home() {
   return (
-    <main className="w-screen h-dvh py-8">
+    <main className="w-screen h-dvh ">
       <TodoAppContextProvider
         initWorkSpaces={[workspace]}
         initTodoLists={[]}
