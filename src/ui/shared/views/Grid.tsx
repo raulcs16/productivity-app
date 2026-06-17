@@ -24,7 +24,7 @@ export default function Grid<T>({
             key={index}
             onClick={() => onItemClicked(index)}
             /* Items naturally fill 100% of their grid cell, preventing shrinking completely */
-            className="w-full h-72 flex flex-col justify-start cursor-pointer group"
+            className="w-full h-100 flex flex-col justify-start cursor-pointer group"
           >
             <div className="grow overflow-hidden rounded-lg p-2 pointer-events-none select-none">
               <div
