@@ -24,6 +24,7 @@ interface TodoAppStore {
 interface TodoAppController {
   addList: (title: string, workSpaceId: number) => number;
   addTodo: (task: string, parentId: number) => void;
+  updateTodoState: (id: number) => void;
   setCurrentListIndex: (index: number) => void;
   setEditId: (id: number) => void;
   nodeSelected: (id: number) => void;

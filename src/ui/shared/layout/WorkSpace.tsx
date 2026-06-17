@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 
 interface WorkspaceProps {
+  leftHeader?: React.ReactNode;
   title: React.ReactNode;
   workspace: React.ReactNode;
   sideBar: React.ReactNode;
@@ -13,14 +14,16 @@ export default function Workspace(props: WorkspaceProps) {
   const [sideBarOpen, setSideBarOpen] = useState<boolean>(props.sideBarOpen);
 
   return (
-    <div className="w-full h-full pt-3">
-      <div className="w-full h-5 flex justify-between px-3 items-center pb-3 border-b border-slate-800">
-        <div></div>
+    <div className="w-full h-full pt-3 flex flex-col">
+      {/* HEADER SECTION */}
+      <div className="w-full flex justify-between px-3 items-end pb-3 border-b border-slate-800 shrink-0">
+        <div>{props.leftHeader}</div>
         {props.title}
         <button
           onClick={() => {
             setSideBarOpen(!sideBarOpen);
           }}
+          className="cursor-pointer text-slate-400 hover:text-white transition-colors"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -29,35 +32,38 @@ export default function Workspace(props: WorkspaceProps) {
             strokeWidth="2"
             className="w-5 h-5"
           >
-            {/* Left Rectangle: Main Workspace (Always hollow) */}
-            <rect x="3" y="3" width="11" height="18" rx="1.5" fill="none" />
-
-            {/* Right Rectangle: Sidebar (Fills white if open) */}
+            <rect x="3" y="3" width="18" height="18" rx="2" fill="none" />
             <rect
               x="14"
               y="3"
               width="7"
               height="18"
-              rx="1.5"
+              rx="2"
               fill={sideBarOpen ? "currentColor" : "none"}
+              stroke={sideBarOpen ? "none" : "currentColor"}
             />
           </svg>
         </button>
       </div>
-      <div className="w-full h-full flex overflow-hidden min-w-0 relative">
-        <div className="flex-1 h-full flex flex-col min-w-0 overflow-hidden">
+
+      {/* BODY VIEWPORT WINDOW CONTAINER */}
+      <div className="w-full flex-1 min-h-0 relative overflow-hidden">
+        {/* Main Workspace (Takes full space, independent of sidebar status) */}
+        <div className="w-full h-full flex flex-col min-w-0 overflow-hidden">
           {props.workspace}
         </div>
+
+        {/* Floating Sidebar Panel (Overlays smoothly from the right) */}
         <div
-          className={`h-full flex flex-col min-w-0 shrink-0 overflow-visible border-l border-slate-200 dark:border-slate-800 transition-all duration-200 ease-in-out relative ${
-            sideBarOpen ? "w-64" : "w-0 border-l-0!"
-          }`}
+          className={`absolute right-0 top-0 bottom-0 w-64 z-30
+                     flex flex-col overflow-hidden
+                     bg-slate-950
+                     border-l border-slate-800
+                     shadow-2xl shadow-black/50
+                     transition-transform duration-300 ease-in-out will-change-transform
+                     ${sideBarOpen ? "translate-x-0" : "translate-x-full"}`}
         >
-          <div
-            className={`w-64 h-full flex flex-col overflow-hidden ${
-              !sideBarOpen && "pointer-events-none opacity-0"
-            }`}
-          >
+          <div className="w-full h-full flex flex-col overflow-hidden">
             {props.sideBar}
           </div>
         </div>

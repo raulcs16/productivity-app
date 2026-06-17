@@ -12,19 +12,23 @@ import {
   useTodoAppController,
   useTodoAppStore,
 } from "@/src/apps/TodoApp/TodoAppContext";
-interface TodoListWorkSpaceProps {}
+import { LayoutType } from "@/src/apps/TodoApp/TodoListApp";
+import DotNavigation from "../shared/controls/DotNavigation";
+interface TodoListWorkSpaceProps {
+  layout: LayoutType;
+  setLayout: (layout: LayoutType) => void;
+}
 
 export default function TodoListWorkSpace(props: TodoListWorkSpaceProps) {
   const store = useTodoAppStore();
   const controller = useTodoAppController();
-  const [layout, setLayout] = useState(0); //0 for slide, 1 for grid select
 
   const [addNewListActive, setAddNewListActive] = useState(false);
   const totalLists = store.todolists.length;
 
   function scrollToBoard(index: number) {
     controller.setCurrentListIndex(index);
-    if (layout !== 0) setLayout(0);
+    if (props.layout !== LayoutType.Slide) props.setLayout(LayoutType.Slide);
   }
 
   function handlePrev() {
@@ -44,46 +48,47 @@ export default function TodoListWorkSpace(props: TodoListWorkSpaceProps) {
         : store.currentListIndex + 1;
     scrollToBoard(nextIndex);
   }
-  function handleToggle(state: boolean) {
-    if (!state) {
-      if (layout === 1) return;
-      setLayout(1);
-    }
-    if (state) {
-      if (layout === 0) return;
-      setLayout(0);
-    }
-  }
 
   return (
-    <div className=" text-white  flex flex-col justify-start w-full h-full overflow-clip">
-      <header className="w-full px-8 py-2 mb-4 flex flex-col md:flex-row items-center justify-between shrink-0 gap-4">
-        <div className="w-full flex items-center  justify-between md:justify-end gap-4">
-          <GridToggle
-            active={layout === 1}
-            onToggled={(state) => {
-              handleToggle(state);
-            }}
-          ></GridToggle>
-          <NextPrevButtons
-            total={totalLists}
-            currentIndex={store.currentListIndex}
-            onNext={() => handleNext()}
-            onPrev={() => handlePrev()}
-          ></NextPrevButtons>
-          <Button
-            title="New List"
-            onClick={() => {
-              controller.addList("new list", store.currentWorkSpaceId);
-              setAddNewListActive(false);
-            }}
-            active={addNewListActive}
+    <div className="relative text-white  flex flex-col justify-start w-full h-full overflow-clip">
+      <div className="absolute right-9 top-3 z-20">
+        <button
+          title="New List"
+          className="flex items-center justify-center h-9 w-9 rounded-xl 
+               bg-slate-900/60 hover:bg-indigo-600 
+               text-slate-400 hover:text-white 
+               border border-slate-800/80 hover:border-indigo-500
+               shadow-lg shadow-black/20 hover:shadow-indigo-500/20
+               transition-all duration-200 ease-in-out backdrop-blur-sm
+               cursor-pointer active:scale-95"
+          onClick={() => {
+            controller.addList("new list", store.currentWorkSpaceId);
+            setAddNewListActive(true);
+          }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="w-4 h-4 transition-transform duration-200 group-hover:rotate-90"
           >
-            New List
-          </Button>
-        </div>
-      </header>
-      {layout === 0 ? (
+            <line x1="5" y1="12" x2="19" y2="12" />
+            <line x1="12" y1="5" x2="12" y2="19" />
+          </svg>
+        </button>
+      </div>
+      <div className="w-1/2 flex items-center justify-center px-10 py-1 mx-auto">
+        <DotNavigation
+          total={totalLists}
+          currentIndex={store.currentListIndex}
+          onIndexSelect={(index) => scrollToBoard(index)}
+        ></DotNavigation>
+      </div>
+      {props.layout === LayoutType.Slide ? (
         <SlideOver
           items={store.todolists}
           currentIndex={store.currentListIndex}

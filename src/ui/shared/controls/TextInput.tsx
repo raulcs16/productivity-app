@@ -38,6 +38,8 @@ export default function TextInput(props: TextInputProps) {
       onChange={handleChange}
       onKeyDown={handleKeyDown}
       onBlur={() => props.onBlur?.()}
+      inputMode="text"
+      enterKeyHint="enter"
     />
   );
 }
