@@ -1,6 +1,11 @@
 "use client";
 import { ExplorerNode, ExplorerType } from "@/src/core/explorer/explorer";
-import { Todo, TodoList, TodoWorkSpace } from "@/src/core/todolist/todo";
+import {
+  Todo,
+  TodoList,
+  TodoState,
+  TodoWorkSpace,
+} from "@/src/core/todolist/todo";
 import React, { createContext, useContext, useMemo, useState } from "react";
 
 interface TodoAppStore {
@@ -18,6 +23,7 @@ interface TodoAppStore {
 
 interface TodoAppController {
   addList: (title: string, workSpaceId: number) => number;
+  addTodo: (task: string, parentId: number) => void;
   setCurrentListIndex: (index: number) => void;
   setEditId: (id: number) => void;
   nodeSelected: (id: number) => void;
@@ -103,6 +109,33 @@ export function TodoAppContextProvider(props: TodoAppContextProps) {
         setAllLists((prev) => [...prev, list]);
         setSelectedId(list.id);
         return list.id;
+      },
+      addTodo: (task: string, parentId: number) => {
+        const todo: Todo = {
+          id: Date.now(),
+          listId: parentId,
+          task: task,
+          state: TodoState.Ready,
+        };
+        setTodos((prev) => [...prev, todo]);
+      },
+      updateTodoState: (todoId: number) => {
+        // 💡 State rotation mapping dictionary
+        const nextStateMap: Record<TodoState, TodoState> = {
+          [TodoState.Ready]: TodoState.Started,
+          [TodoState.Started]: TodoState.Completed,
+          [TodoState.Completed]: TodoState.Ready, // Loops back to Ready, or change to whatever your fallback is
+          [TodoState.Archived]: TodoState.Archived,
+          [TodoState.Scheduled]: TodoState.Scheduled,
+        };
+
+        setTodos((prev) =>
+          prev.map((todo) =>
+            todo.id === todoId
+              ? { ...todo, state: nextStateMap[todo.state] } // 💡 Rotate state safely
+              : todo
+          )
+        );
       },
       setCurrentListIndex: (index: number) => {
         if (index < 0 || index > todolists.length) return;

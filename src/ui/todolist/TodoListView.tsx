@@ -35,7 +35,7 @@ export default function TodoListView(props: TodoListViewProps) {
         <TextInput
           onChange={(text) => {}}
           onEnter={(text) => {
-            // controller.addTodo(props.id, text);
+            controller.addTodo(text, props.id);
           }}
           placeHolder="Add Todo's"
         />
@@ -47,7 +47,7 @@ export default function TodoListView(props: TodoListViewProps) {
           textColor="#3b82f6"
           todos={todos.filter((todo) => todo.state === TodoState.Ready)}
           onItemDoubleClicked={(todoId) => {
-            // controller.updateTodoState(todoId);
+            controller.updateTodoState(todoId);
           }}
         />
 
@@ -58,26 +58,25 @@ export default function TodoListView(props: TodoListViewProps) {
           isFocused={true} // Triggers special emphasis styling
           todos={todos.filter((todo) => todo.state === TodoState.Started)}
           onItemDoubleClicked={(todoId) => {
-            // controller.updateTodoState(todoId);
+            controller.updateTodoState(todoId);
           }}
         />
-
         <TodoListSection
           id={props.id}
-          title="Scheduled"
-          textColor="#64748b"
-          todos={todos.filter((todo) => todo.state === TodoState.Scheduled)}
+          title="Completed"
+          textColor="#10b981"
+          todos={todos.filter((todo) => todo.state === TodoState.Completed)}
           onItemDoubleClicked={(todoId) => {
-            // controller.updateTodoState(todoId);
+            controller.updateTodoState(todoId);
           }}
         />
 
         <div className="mt-8 pt-6 border-t border-slate-700/40 space-y-4">
           <TodoListSection
             id={props.id}
-            title="Completed"
-            textColor="#10b981"
-            todos={todos.filter((todo) => todo.state === TodoState.Completed)}
+            title="Scheduled"
+            textColor="#64748b"
+            todos={todos.filter((todo) => todo.state === TodoState.Scheduled)}
             onItemDoubleClicked={(todoId) => {
               // controller.updateTodoState(todoId);
             }}

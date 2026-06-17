@@ -94,7 +94,7 @@ export default function SlideOver<T>({
   return (
     <div
       ref={scrollContainerRef}
-      className="w-full grow flex gap-6 overflow-x-auto px-[calc(50vw-16.666vw)] items-top pt-10 mx-auto no-scrollbar py-3"
+      className="w-full grow flex gap-6 overflow-x-auto px-[calc(50vw-16.666vw)] items-top mx-auto no-scrollbar py-3"
       style={{
         scrollSnapType: "x mandatory",
         WebkitOverflowScrolling: "touch",
