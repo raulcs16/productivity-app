@@ -90,13 +90,15 @@ export default function TodoListWorkSpace(props: TodoListWorkSpaceProps) {
           )}
         ></Grid>
       )}
-      <div className="absolute w-1/2 flex items-center justify-center px-10 py-1 mx-auto bottom-1 left-1/2 -translate-x-1/2">
-        <DotNavigation
-          total={totalLists}
-          currentIndex={store.currentListIndex}
-          onIndexSelect={(index) => scrollToBoard(index)}
-        ></DotNavigation>
-      </div>
+      {props.layout === LayoutType.Slide && (
+        <div className="absolute w-1/2 flex items-center justify-center px-10 py-1 mx-auto bottom-1 left-1/2 -translate-x-1/2">
+          <DotNavigation
+            total={totalLists}
+            currentIndex={store.currentListIndex}
+            onIndexSelect={(index) => scrollToBoard(index)}
+          ></DotNavigation>
+        </div>
+      )}
       <div className="absolute right-8 bottom-1 z-20">
         <button
           title="New List"
