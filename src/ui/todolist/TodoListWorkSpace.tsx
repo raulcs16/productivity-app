@@ -61,7 +61,7 @@ export default function TodoListWorkSpace(props: TodoListWorkSpaceProps) {
           renderItem={(todolist, index, isFocused) => (
             <HoverCard
               index={index}
-              className="h-full"
+              className="h-[95%] border"
               onClicked={(index) => {
                 scrollToBoard(index);
               }}
@@ -90,14 +90,14 @@ export default function TodoListWorkSpace(props: TodoListWorkSpaceProps) {
           )}
         ></Grid>
       )}
-      <div className="absolute w-1/2 flex items-center justify-center px-10 py-1 mx-auto bottom-2 left-1/2 -translate-x-1/2">
+      <div className="absolute w-1/2 flex items-center justify-center px-10 py-1 mx-auto bottom-1 left-1/2 -translate-x-1/2">
         <DotNavigation
           total={totalLists}
           currentIndex={store.currentListIndex}
           onIndexSelect={(index) => scrollToBoard(index)}
         ></DotNavigation>
       </div>
-      <div className="absolute right-12 bottom-2 z-20">
+      <div className="absolute right-8 bottom-1 z-20">
         <button
           title="New List"
           className="flex items-center justify-center h-12 w-12 rounded-xl 
