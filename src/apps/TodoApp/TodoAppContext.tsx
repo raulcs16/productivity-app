@@ -158,7 +158,7 @@ export function TodoAppContextProvider(props: TodoAppContextProps) {
   );
   return (
     <TodoAppContext.Provider value={{ store, controller }}>
-      {props.children}t
+      {props.children}
     </TodoAppContext.Provider>
   );
 }
