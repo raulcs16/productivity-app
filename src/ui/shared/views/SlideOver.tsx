@@ -66,6 +66,7 @@ export default function SlideOver<T>({
           // Do NOT call the parent's handler mid-flight. This keeps the animations smooth.
           if (index !== localIndex) {
             setLocalIndex(index);
+            onIntentIndexChanged(index);
           }
         }
       });
@@ -74,22 +75,6 @@ export default function SlideOver<T>({
     container.addEventListener("scroll", handleScroll);
     return () => container.removeEventListener("scroll", handleScroll);
   }, [localIndex]);
-
-  // 3. ⚡ TELEMETRY TRANSMITTER: Only alerts the parent when the layout safely finishes settling
-  useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-
-    const handleScrollEnd = () => {
-      // Once the container stops moving completely, let the parent know where we landed
-      if (localIndex !== currentIndex) {
-        onIntentIndexChanged(localIndex);
-      }
-    };
-
-    container.addEventListener("scrollend", handleScrollEnd);
-    return () => container.removeEventListener("scrollend", handleScrollEnd);
-  }, [localIndex, currentIndex, onIntentIndexChanged]);
 
   return (
     <div
