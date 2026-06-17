@@ -15,7 +15,7 @@ export default function Grid<T>({
   renderItem,
 }: GridProps<T>) {
   return (
-    <div className="w-full h-full grid grid-cols-2 gap-2 p-4 overflow-auto items-start">
+    <div className="w-full h-full grid grid-cols-2 md:grid-cols-4 gap-2 p-4 overflow-auto items-start">
       {items.map((item, index) => {
         const isFocused = index === currentIndex;
 
