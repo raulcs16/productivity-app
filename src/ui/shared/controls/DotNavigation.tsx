@@ -122,7 +122,7 @@ function DotIndexButton({
     >
       <button
         onClick={() => onIndexSelect(index)}
-        className={`h-2 w-2 shrink-0 rounded-full transition-all duration-300 ${
+        className={`h-3 w-3 shrink-0 rounded-full transition-all duration-300 ${
           isActive
             ? "bg-indigo-500 shadow-sm shadow-indigo-500/50 scale-110"
             : "bg-slate-600 hover:bg-slate-400"
@@ -130,7 +130,7 @@ function DotIndexButton({
         aria-label={`Go to board ${index + 1}`}
       />
       <span
-        className={`transition-all duration-300 text-[10px] font-bold font-mono text-center block tracking-tighter ${
+        className={`transition-all duration-300 text-[12px] font-bold font-mono text-center block tracking-tighter ${
           isActive
             ? "opacity-100 text-indigo-400 scale-105"
             : "opacity-40 text-slate-500 text-[9px]"

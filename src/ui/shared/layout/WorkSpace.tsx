@@ -29,16 +29,15 @@ export default function Workspace(props: WorkspaceProps) {
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             stroke="currentColor"
-            strokeWidth="2"
-            className="w-5 h-5"
+            strokeWidth="1"
+            className="w-7 h-7"
           >
-            <rect x="3" y="3" width="18" height="18" rx="2" fill="none" />
+            <rect x="3" y="3" width="18" height="18" fill="none" />
             <rect
               x="14"
               y="3"
               width="7"
               height="18"
-              rx="2"
               fill={sideBarOpen ? "currentColor" : "none"}
               stroke={sideBarOpen ? "none" : "currentColor"}
             />
@@ -55,9 +54,9 @@ export default function Workspace(props: WorkspaceProps) {
 
         {/* Floating Sidebar Panel (Overlays smoothly from the right) */}
         <div
-          className={`absolute right-0 top-0 bottom-0 w-64 z-30
+          className={`absolute right-0 top-0 bottom-0 w-[80vw] z-90
                      flex flex-col overflow-hidden
-                     bg-slate-950
+                     bg-[#0A0A0A]
                      border-l border-slate-800
                      shadow-2xl shadow-black/50
                      transition-transform duration-300 ease-in-out will-change-transform

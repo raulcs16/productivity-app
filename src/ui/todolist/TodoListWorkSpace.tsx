@@ -51,10 +51,58 @@ export default function TodoListWorkSpace(props: TodoListWorkSpaceProps) {
 
   return (
     <div className="relative text-white  flex flex-col justify-start w-full h-full overflow-clip">
-      <div className="absolute right-9 top-3 z-20">
+      {props.layout === LayoutType.Slide ? (
+        <section>
+          <SlideOver
+            items={store.todolists}
+            currentIndex={store.currentListIndex}
+            onIntentIndexChanged={(index) => {
+              scrollToBoard(index);
+            }}
+            renderItem={(todolist, index, isFocused) => (
+              <HoverCard
+                index={index}
+                className="h-full"
+                onClicked={(index) => {
+                  scrollToBoard(index);
+                }}
+              >
+                <TodoListView id={todolist.id} title={todolist.title} />
+              </HoverCard>
+            )}
+          ></SlideOver>
+          <div className="absolute w-1/2 flex items-center justify-center px-10 py-1 mx-auto bottom-10 left-1/2 -translate-x-1/2">
+            <DotNavigation
+              total={totalLists}
+              currentIndex={store.currentListIndex}
+              onIndexSelect={(index) => scrollToBoard(index)}
+            ></DotNavigation>
+          </div>
+        </section>
+      ) : (
+        <Grid
+          items={store.todolists}
+          currentIndex={store.currentListIndex}
+          onItemClicked={(index) => {
+            scrollToBoard(index);
+          }}
+          renderItem={(todolist, index, isFocused) => (
+            <HoverCard
+              index={index}
+              className="h-full ring-1 ring-amber-300 rounded-2xl"
+            >
+              <TodoListView
+                id={todolist.id}
+                title={todolist.title}
+              ></TodoListView>
+            </HoverCard>
+          )}
+        ></Grid>
+      )}
+      <div className="absolute right-12 bottom-15 z-20">
         <button
           title="New List"
-          className="flex items-center justify-center h-9 w-9 rounded-xl 
+          className="flex items-center justify-center h-12 w-12 rounded-xl 
                bg-slate-900/60 hover:bg-indigo-600 
                text-slate-400 hover:text-white 
                border border-slate-800/80 hover:border-indigo-500
@@ -71,59 +119,16 @@ export default function TodoListWorkSpace(props: TodoListWorkSpaceProps) {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth="2.5"
+            strokeWidth="3"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="w-4 h-4 transition-transform duration-200 group-hover:rotate-90"
+            className="w-8 h-8 transition-transform duration-200 group-hover:rotate-90"
           >
             <line x1="5" y1="12" x2="19" y2="12" />
             <line x1="12" y1="5" x2="12" y2="19" />
           </svg>
         </button>
       </div>
-      <div className="w-1/2 flex items-center justify-center px-10 py-1 mx-auto">
-        <DotNavigation
-          total={totalLists}
-          currentIndex={store.currentListIndex}
-          onIndexSelect={(index) => scrollToBoard(index)}
-        ></DotNavigation>
-      </div>
-      {props.layout === LayoutType.Slide ? (
-        <SlideOver
-          items={store.todolists}
-          currentIndex={store.currentListIndex}
-          onIntentIndexChanged={(index) => {
-            scrollToBoard(index);
-          }}
-          renderItem={(todolist, index, isFocused) => (
-            <HoverCard
-              index={index}
-              className="h-full"
-              onClicked={(index) => {
-                scrollToBoard(index);
-              }}
-            >
-              <TodoListView id={todolist.id} title={todolist.title} />
-            </HoverCard>
-          )}
-        ></SlideOver>
-      ) : (
-        <Grid
-          items={store.todolists}
-          currentIndex={store.currentListIndex}
-          onItemClicked={(index) => {
-            scrollToBoard(index);
-          }}
-          renderItem={(todolist, index, isFocused) => (
-            <HoverCard index={index} className="h-full p-6">
-              <TodoListView
-                id={todolist.id}
-                title={todolist.title}
-              ></TodoListView>
-            </HoverCard>
-          )}
-        ></Grid>
-      )}
     </div>
   );
 }

@@ -12,8 +12,6 @@ export default function HoverCard(props: HoverCardProps) {
   return (
     <div
       className={`
-        rounded-2xl 
-        ring-1 ring-amber-300
         transition-all 
         duration-300 
         ease-out 
@@ -22,7 +20,7 @@ export default function HoverCard(props: HoverCardProps) {
         w-full
         overflow-hidden
         flex flex-col min-h-0
-        ${props.className || ""}
+        ${props.className}
       `}
       onClick={() => {
         if (props.onClicked) props.onClicked(props.index);

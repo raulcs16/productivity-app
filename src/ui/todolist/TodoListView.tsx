@@ -37,7 +37,7 @@ export default function TodoListView(props: TodoListViewProps) {
           onEnter={(text) => {
             controller.addTodo(text, props.id);
           }}
-          placeHolder="Add Todo's"
+          placeHolder="Add Todo"
         />
       </header>
       <div className="flex-1 overflow-y-auto pr-1 no-scrollbar space-y-4 pb-2">

@@ -24,16 +24,19 @@ export default function GridToggle(props: GridToggleProps) {
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="w-5 h-5 transition-transform duration-200 group-hover:scale-105 transform-gpu"
+        className="w-4 h-4 transition-transform duration-200 group-hover:scale-105 transform-gpu"
       >
-        {/* Top-Left Square */}
-        <rect x="3" y="3" width="7" height="7" rx="1" />
-        {/* Top-Right Square */}
-        <rect x="14" y="3" width="7" height="7" rx="1" />
+        {/* Top-Left Square (Expanded to 9x9, sitting flush with a 2px outer margin) */}
+        <rect x="2" y="2" width="9" height="9" rx="1.5" />
+
+        {/* Top-Right Square (Starts at x=13 to preserve a perfect 2px center gutter) */}
+        <rect x="13" y="2" width="9" height="9" rx="1.5" />
+
         {/* Bottom-Left Square */}
-        <rect x="3" y="14" width="7" height="7" rx="1" />
+        <rect x="2" y="13" width="9" height="9" rx="1.5" />
+
         {/* Bottom-Right Square */}
-        <rect x="14" y="14" width="7" height="7" rx="1" />
+        <rect x="13" y="13" width="9" height="9" rx="1.5" />
       </svg>
     </Button>
   );
