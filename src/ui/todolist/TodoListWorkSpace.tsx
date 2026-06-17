@@ -61,7 +61,7 @@ export default function TodoListWorkSpace(props: TodoListWorkSpaceProps) {
           renderItem={(todolist, index, isFocused) => (
             <HoverCard
               index={index}
-              className="h-[95%] border"
+              className="h-[95%] "
               onClicked={(index) => {
                 scrollToBoard(index);
               }}
