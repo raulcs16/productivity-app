@@ -3,54 +3,50 @@ import ContextButton from "../shared/controls/ContextButton";
 import TextInput from "../shared/controls/TextInput";
 import Scrim from "../shared/controls/Scrim";
 
-interface ExplorerDelegateProps {
-  id: number;
+interface ExplorerRowProps {
   type: ExplorerType;
   title: string;
   route?: string;
   editable: boolean;
   selected: boolean;
   style?: React.CSSProperties;
-  onContextMenu: (id: number, x: number, y: number) => void;
-  onSelected: (id: number) => void;
-  onRename: (id: number, title: string) => void;
-  onCancelEdit: (id: number) => void;
+  onContextMenu: (x: number, y: number) => void;
+  onSelected: () => void;
+  onRename: (newTitle: string) => void;
+  onCancelEdit: () => void;
 }
-export default function ExplorerDelegate(props: ExplorerDelegateProps) {
+export default function ExplorerRow(props: ExplorerRowProps) {
   return props.editable ? (
     <div className="w-full px-2 ">
-      <Scrim z={40} onClickedAway={() => props.onCancelEdit(props.id)}></Scrim>
+      <Scrim z={40} onClickedAway={() => props.onCancelEdit()}></Scrim>
       <div className="relative z-50" style={props.style}>
         <TextInput
           onEnter={(text) => {
-            props.onRename(props.id, text);
+            props.onRename(text);
           }}
           onChange={(text) => {}}
           placeHolder={props.title}
           onBlur={() => {
-            props.onCancelEdit(props.id);
+            props.onCancelEdit();
           }}
         />
       </div>
     </div>
   ) : (
     <li
-      className={` w-full hover:bg-[#FFFFFF11] cursor-pointer px-3 ${
+      className={` w-full hover:bg-[#FFFFFF11] cursor-pointer px-3 list-none  ${
         props.selected && "bg-[#FFFFFF11]"
       } ${props.type === ExplorerType.Container && "font-bold text-blue-400"}`}
-      onClick={() => {
-        props.onSelected(props.id);
-      }}
+      onClick={() => props.onSelected()}
       onContextMenu={(e) => {
-        //get global x and global y
         e.preventDefault();
         e.stopPropagation();
-        props.onContextMenu(props.id, e.clientX, e.clientY);
+        props.onContextMenu(e.clientX, e.clientY);
       }}
     >
       <ContextButton
         onClick={(x, y) => {
-          props.onContextMenu(props.id, x, y);
+          props.onContextMenu(x, y);
         }}
       >
         <p className="py-1 text-lg truncate max-w-[15ch]" style={props.style}>

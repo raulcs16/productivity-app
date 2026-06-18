@@ -29,6 +29,7 @@ interface TodoAppController {
   setEditId: (id: number) => void;
   nodeSelected: (id: number) => void;
   addNode: (type: ExplorerType, title: string, parentId: number) => void;
+  deleteNode: (nodeId: number) => void;
   rename: (id: number, newName: string) => void;
 }
 
@@ -186,6 +187,9 @@ export function TodoAppContextProvider(props: TodoAppContextProps) {
       },
       setEditId: (id: number) => {
         setEditableId(id);
+      },
+      deleteNode: (nodeId: number) => {
+        setAllLists((prev) => prev.filter((l) => l.id !== nodeId));
       },
     }),
     [allLists, currentWorkSpaceId]

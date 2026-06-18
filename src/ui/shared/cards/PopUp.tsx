@@ -20,10 +20,10 @@ export default function PopUp({
       {/* 1. Backdrop Scrim */}
       <Scrim
         onClickedAway={onClickedAway} // Wired up the close callback
-        z={40} // High z-index to sit on top of main page content
+        z={80} // High z-index to sit on top of main page content
       />
 
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none ">
+      <div className="fixed inset-0 z-80 flex items-center justify-center p-4 pointer-events-none ">
         {/* ADDED: Full-screen backdrop blur element */}
         <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" />
         <div className="pointer-events-auto w-full max-w-md transform overflow-hidden rounded-xl border px-1 pt-1 pb-6 text-left align-middle shadow-2xl shadow-black/80 transition-all transform-gpu animate-in fade-in zoom-in-95 duration-150">

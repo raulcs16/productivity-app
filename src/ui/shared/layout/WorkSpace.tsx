@@ -54,7 +54,7 @@ export default function Workspace(props: WorkspaceProps) {
 
         {/* Floating Sidebar Panel (Overlays smoothly from the right) */}
         <div
-          className={`absolute right-0 top-0 bottom-0 w-[80vw] max-w-lg z-90
+          className={`absolute right-0 top-0 bottom-0 w-[80vw] max-w-lg z-10
                      flex flex-col overflow-hidden
                      bg-[#0A0A0A]
                      border-l border-slate-800

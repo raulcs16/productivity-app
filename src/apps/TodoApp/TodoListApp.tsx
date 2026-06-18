@@ -8,6 +8,9 @@ import { ExplorerType } from "@/src/core/explorer/explorer";
 import { useState } from "react";
 import GridToggle from "@/src/ui/shared/controls/GridToggle";
 import { Edu_NSW_ACT_Foundation } from "next/font/google";
+import ExplorerDelegate from "./ExplorerRowDelegate";
+import ExplorerRowDelegate from "./ExplorerRowDelegate";
+import TodoExplorer from "./TodoExplorer";
 
 interface TodoListAppProps {}
 
@@ -17,8 +20,6 @@ export enum LayoutType {
 }
 
 export default function TodoListApp(props: TodoListAppProps) {
-  const store = useTodoAppStore();
-  const controller = useTodoAppController();
   const [layout, setLayout] = useState<LayoutType>(LayoutType.Slide);
   function ToggleLayout() {
     if (layout === LayoutType.Slide) setLayout(LayoutType.Grid);
@@ -41,28 +42,7 @@ export default function TodoListApp(props: TodoListAppProps) {
           ></TodoListWorkSpace>
         }
         sideBarOpen={false}
-        sideBar={
-          <ExplorerView
-            explorerNodes={store.explorerNodes}
-            selectedId={store.selectedId}
-            editableId={store.editableId}
-            onNodeSelected={(id: number) => {
-              controller.nodeSelected(id);
-            }}
-            onNodeRenamed={(id: number, title: string) => {
-              controller.rename(id, title);
-            }}
-            onNodeDelete={(id: number) => {}}
-            onNodeAdded={(
-              type: ExplorerType,
-              title: string,
-              parentId: number
-            ) => {
-              controller.addNode(type, title, parentId);
-            }}
-            onSetEditId={(id) => controller.setEditId(id)}
-          ></ExplorerView>
-        }
+        sideBar={<TodoExplorer></TodoExplorer>}
       ></Workspace>
     </div>
   );
