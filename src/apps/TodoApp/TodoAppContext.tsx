@@ -1,11 +1,13 @@
 "use client";
 import { ExplorerNode, ExplorerType } from "@/src/core/explorer/explorer";
+import { ExplorerTree } from "@/src/core/explorer/explorer_tree";
 import {
   Todo,
   TodoList,
   TodoState,
   TodoWorkSpace,
 } from "@/src/core/todolist/todo";
+import { TodoListModel } from "@/src/core/todolist/todolist_model";
 import React, { createContext, useContext, useMemo, useState } from "react";
 
 interface TodoAppStore {
@@ -22,7 +24,8 @@ interface TodoAppStore {
 }
 
 interface TodoAppController {
-  addList: (title: string, workSpaceId: number) => number;
+  addWorkSpace: (title: string) => void;
+  addList: (title: string, workSpaceId: number) => void;
   addTodo: (task: string, parentId: number) => void;
   updateTodoState: (id: number) => void;
   setCurrentListIndex: (index: number) => void;
@@ -47,47 +50,45 @@ interface TodoAppContextProps {
 }
 
 export function TodoAppContextProvider(props: TodoAppContextProps) {
+  const models = useMemo(() => {
+    return {
+      todolist: new TodoListModel(/* pass props.init if needed */),
+      explorer: new ExplorerTree(),
+    };
+  }, []);
+
   const [workspaces, setWorkSpaces] = useState<TodoWorkSpace[]>(
     props.initWorkSpaces
   );
-  const [allLists, setAllLists] = useState<TodoList[]>(props.initTodoLists);
   const [todos, setTodos] = useState<Todo[]>(props.initTodos);
   const [currentWorkSpaceId, setCurrentWorkSpaceId] = useState<number>(
     props.initWorkSpaceId
   );
+  const [workspaceTitle, setworkspaceTitle] = useState("Root");
 
   const [selectedId, setSelectedId] = useState<number>(-1);
   const [editableId, setEditableId] = useState<number>(-1);
 
-  const workspaceTitle = useMemo(() => {
-    const activeWorkspace = workspaces.find(
-      (ws) => ws.id === currentWorkSpaceId
-    );
-    return activeWorkspace ? activeWorkspace.title : "Default Workspace";
-  }, [workspaces, currentWorkSpaceId]);
+  const [explorerNodes, setExplorerNodes] = useState<ExplorerNode[]>(
+    models.explorer.getExploreNodes()
+  );
+  const [todolists, setTodoLists] = useState<TodoList[]>(props.initTodoLists);
+  const [currentListIndex, setCurrentListIndex] = useState<number>(0);
 
-  const todolists = useMemo(() => {
-    return allLists.filter((l) => l.workSpaceId === currentWorkSpaceId);
-  }, [allLists, currentWorkSpaceId]);
-  const explorerNodes = useMemo<ExplorerNode[]>(() => {
-    const categories = workspaces.map((ws) => ({
-      id: ws.id,
-      title: ws.title,
-      type: ExplorerType.Container,
-      parentId: 0,
-    }));
-    const items = allLists.map((list) => ({
-      id: list.id,
-      title: list.title,
-      type: ExplorerType.Item,
-      parentId: list.workSpaceId,
-    }));
-    return [...categories, ...items];
-  }, [allLists, workspaces]);
-  const currentListIndex = useMemo(() => {
-    const idx = todolists.findIndex((list) => list.id === selectedId);
-    return idx !== -1 ? idx : 0; // Fallback gracefully to the first entry if no ID is selected
-  }, [todolists, selectedId]);
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      const workspace = models.todolist.getCurrentWorkSpace();
+      setWorkSpaces(models.todolist.getWorkSpaces());
+      setCurrentWorkSpaceId(workspace.id);
+      setworkspaceTitle(workspace.title);
+      setTodoLists(models.todolist.getCurrentTodoLists());
+      setCurrentListIndex(models.todolist.getCurrentListIndex());
+      setTodos(models.todolist.getCurrentTodosByState(TodoState.Ready));
+      setExplorerNodes(models.explorer.getExploreNodes());
+    }, 100); // 100ms interval for near-instant UI reactivity
+
+    return () => clearInterval(interval);
+  }, [models]);
   const store: TodoAppStore = {
     workspaces,
     todolists,
@@ -101,25 +102,17 @@ export function TodoAppContextProvider(props: TodoAppContextProps) {
   };
   const controller: TodoAppController = useMemo(
     () => ({
-      addList: (title: string, parentId: number = currentWorkSpaceId) => {
-        const index = todolists.length;
-        const list: TodoList = {
-          id: Date.now(),
-          title: title,
-          workSpaceId: parentId,
-        };
-        setAllLists((prev) => [...prev, list]);
-        setSelectedId(list.id);
-        return list.id;
+      addWorkSpace: (title: string) => {
+        const id = models.todolist.addWorkSpace(title);
+        models.explorer.addRootContainer(title, id);
       },
-      addTodo: (task: string, parentId: number) => {
-        const todo: Todo = {
-          id: Date.now(),
-          listId: parentId,
-          task: task,
-          state: TodoState.Ready,
-        };
-        setTodos((prev) => [...prev, todo]);
+      addList: (title: string, parentId: number) => {
+        const id = models.todolist.addNewList(title, parentId);
+        if (id < 0) return;
+        models.explorer.addChildItem(title, id, parentId);
+      },
+      addTodo: (task: string) => {
+        models.todolist.addTodo(task);
       },
       updateTodoState: (todoId: number) => {
         // 💡 State rotation mapping dictionary
@@ -147,7 +140,7 @@ export function TodoAppContextProvider(props: TodoAppContextProps) {
       addNode: (type: ExplorerType, title: string, parentId: number) => {
         if (type === ExplorerType.Item) {
           const id = controller.addList(title, parentId);
-          setEditableId(id);
+          setEditableId(0);
         } else if (type === ExplorerType.Container) {
           const workspace: TodoWorkSpace = {
             id: Date.now(),
@@ -168,31 +161,13 @@ export function TodoAppContextProvider(props: TodoAppContextProps) {
         }
         setSelectedId(id);
       },
-      rename: (id: number, newName: string) => {
-        setAllLists((prevTodoLists) =>
-          prevTodoLists.map((list) =>
-            list.id === id
-              ? { ...list, title: newName } // Clone the old object, overwrite the title
-              : list
-          )
-        );
-        setWorkSpaces((prev) =>
-          prev.map((work) =>
-            work.id === id ? { ...work, title: newName } : work
-          )
-        );
-
-        setEditableId(-1);
-        setSelectedId(id);
-      },
+      rename: (id: number, newName: string) => {},
       setEditId: (id: number) => {
         setEditableId(id);
       },
-      deleteNode: (nodeId: number) => {
-        setAllLists((prev) => prev.filter((l) => l.id !== nodeId));
-      },
+      deleteNode: (nodeId: number) => {},
     }),
-    [allLists, currentWorkSpaceId]
+    [models]
   );
   return (
     <TodoAppContext.Provider value={{ store, controller }}>

@@ -9,6 +9,7 @@ import { ExplorerType } from "@/src/core/explorer/explorer";
 import ExplorerView from "@/src/ui/explorer/ExplorerView";
 import ExplorerRowDelegate from "./ExplorerRowDelegate";
 import FolderSvg from "@/src/ui/shared/svg/FolderSvg";
+import { title } from "process";
 
 interface TodoExplorerProps {}
 export default function TodoExplorer(props: TodoExplorerProps) {
@@ -72,7 +73,7 @@ export default function TodoExplorer(props: TodoExplorerProps) {
           y={activeMenu.y}
           open={true}
           onAddFile={(directoyId: number) => {
-            controller.addNode(ExplorerType.Item, "newFile", directoyId);
+            controller.addList("new file", directoyId);
             setActiveMenu(null);
           }}
           onRename={(directoryId) => {
@@ -110,7 +111,7 @@ export default function TodoExplorer(props: TodoExplorerProps) {
           <h1 className="text-sm">{"Explorer"}</h1>
           <button
             onClick={() => {
-              controller.addNode(ExplorerType.Container, "new directory", 0);
+              controller.addWorkSpace("new directory");
             }}
           >
             <FolderSvg></FolderSvg>

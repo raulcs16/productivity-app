@@ -153,10 +153,10 @@ export default function Home() {
   return (
     <main className="w-screen h-dvh pb-4">
       <TodoAppContextProvider
-        initWorkSpaces={workspaces}
-        initTodoLists={todoLists}
-        initTodos={todos}
-        initWorkSpaceId={1}
+        initWorkSpaces={[]}
+        initTodoLists={[]}
+        initTodos={[]}
+        initWorkSpaceId={0}
       >
         <TodoListApp></TodoListApp>
       </TodoAppContextProvider>

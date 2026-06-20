@@ -1,13 +1,9 @@
 "use client";
-import React, { useRef, useState, useEffect } from "react";
-import { Todo, TodoList } from "@/src/core/todolist/todo";
+import { useState } from "react";
 import HoverCard from "@/src/ui/shared/cards/HoverCard";
 import TodoListView from "./TodoListView";
-import NextPrevButtons from "../shared/controls/NextPrevButtons";
 import SlideOver from "../shared/views/SlideOver";
 import Grid from "../shared/views/Grid";
-import GridToggle from "../shared/controls/GridToggle";
-import Button from "../shared/controls/Button";
 import {
   useTodoAppController,
   useTodoAppStore,

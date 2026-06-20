@@ -1,15 +1,9 @@
 "use client";
 import TodoListWorkSpace from "@/src/ui/todolist/TodoListWorkSpace";
 import Workspace from "@/src/ui/shared/layout/WorkSpace";
-import ExplorerView from "@/src/ui/explorer/ExplorerView";
-import { useTodoAppController, useTodoAppStore } from "./TodoAppContext";
 import TodoAppTitle from "./TodoAppTitle";
-import { ExplorerType } from "@/src/core/explorer/explorer";
 import { useState } from "react";
 import GridToggle from "@/src/ui/shared/controls/GridToggle";
-import { Edu_NSW_ACT_Foundation } from "next/font/google";
-import ExplorerDelegate from "./ExplorerRowDelegate";
-import ExplorerRowDelegate from "./ExplorerRowDelegate";
 import TodoExplorer from "./TodoExplorer";
 
 interface TodoListAppProps {}
