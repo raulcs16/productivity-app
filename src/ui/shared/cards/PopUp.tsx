@@ -20,7 +20,7 @@ export default function PopUp({
       {/* 1. Backdrop Scrim */}
       <Scrim
         onClickedAway={onClickedAway} // Wired up the close callback
-        z={80} // High z-index to sit on top of main page content
+        z={50}
       />
 
       <div className="fixed inset-0 z-80 flex items-center justify-center p-4 pointer-events-none ">

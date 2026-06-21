@@ -1,10 +1,11 @@
 "use client";
-import { ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 interface ScrimProps {
   onClickedAway: () => void;
   z: number;
+  debug?: boolean;
 }
 
 export default function Scrim(props: ScrimProps) {
@@ -17,12 +18,13 @@ export default function Scrim(props: ScrimProps) {
 
   if (!mounted) return null;
 
+  const rgb = props.debug ? "#ff000088" : "#00000001";
   return createPortal(
     <>
       {/* 1. THE GIANT HITBOX BACKDROP */}
       <div
-        className="fixed inset-0 bg-[#00000001] cursor-default select-none"
-        style={{ zIndex: props.z }}
+        className={`fixed inset-0 cursor-default select-none`}
+        style={{ zIndex: props.z, backgroundColor: rgb }}
         onClick={(e) => {
           e.stopPropagation(); // Stop the event trail
           props.onClickedAway(); // Signal to parent to close/setEdit(false)

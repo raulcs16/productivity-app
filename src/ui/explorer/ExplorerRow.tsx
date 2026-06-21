@@ -17,7 +17,7 @@ interface ExplorerRowProps {
 }
 export default function ExplorerRow(props: ExplorerRowProps) {
   return props.editable ? (
-    <div className="w-full px-2 ">
+    <div className="w-full px-2">
       <Scrim z={40} onClickedAway={() => props.onCancelEdit()}></Scrim>
       <div className="relative z-50" style={props.style}>
         <TextInput

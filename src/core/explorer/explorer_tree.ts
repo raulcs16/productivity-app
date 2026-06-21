@@ -43,12 +43,10 @@ export class ExplorerTree {
       route: this.rootContainers.get(id)?.route + "/" + title,
     });
   }
-  public getExploreNodes(): ExplorerNode[] {
-    const result: ExplorerNode[] = [];
-    this.rootContainers.forEach((container) => {
-      result.push(container);
-      result.push(...(this.childNodes.get(container.id) ?? []));
-    });
-    return result;
+  public getRootNodes(): ExplorerNode[] {
+    return [...this.rootContainers.values()];
+  }
+  public getChildNodes(): Map<number, ExplorerNode[]> {
+    return this.childNodes;
   }
 }

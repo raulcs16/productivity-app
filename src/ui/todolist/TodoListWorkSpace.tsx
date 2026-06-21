@@ -87,7 +87,7 @@ export default function TodoListWorkSpace(props: TodoListWorkSpaceProps) {
         ></Grid>
       )}
       {props.layout === LayoutType.Slide && (
-        <div className="absolute w-1/2 flex items-center justify-center px-10 py-1 mx-auto bottom-1 left-1/2 -translate-x-1/2">
+        <div className="absolute w-1/2 border flex items-center justify-center px-10 py-1 mx-auto bottom-1 left-1/2 -translate-x-1/2">
           <DotNavigation
             total={totalLists}
             currentIndex={store.currentListIndex}
@@ -95,36 +95,6 @@ export default function TodoListWorkSpace(props: TodoListWorkSpaceProps) {
           ></DotNavigation>
         </div>
       )}
-      <div className="absolute right-8 bottom-1 z-20">
-        <button
-          title="New List"
-          className="flex items-center justify-center h-12 w-12 rounded-xl 
-               bg-slate-900/60 hover:bg-indigo-600 
-               text-slate-400 hover:text-white 
-               border border-slate-800/80 hover:border-indigo-500
-               shadow-lg shadow-black/20 hover:shadow-indigo-500/20
-               transition-all duration-200 ease-in-out backdrop-blur-sm
-               cursor-pointer active:scale-95"
-          onClick={() => {
-            controller.addList("new list", store.currentWorkSpaceId);
-            setAddNewListActive(true);
-          }}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="w-8 h-8 transition-transform duration-200 group-hover:rotate-90"
-          >
-            <line x1="5" y1="12" x2="19" y2="12" />
-            <line x1="12" y1="5" x2="12" y2="19" />
-          </svg>
-        </button>
-      </div>
     </div>
   );
 }

@@ -48,6 +48,12 @@ export class TodoListModel {
     this.currentWorkSpaceId = id;
     return true;
   }
+  public setTodoListIndex(index: number) {
+    if (index < 0) return;
+    const lists = this.getCurrentTodoLists();
+    if (lists.length <= index) return;
+    this.currentListId = lists[index].id;
+  }
   public setTodoList(id: number): boolean {
     const list = this.lists.find((item) => item.id === id);
     if (!list) return false;
@@ -75,7 +81,7 @@ export class TodoListModel {
       (item) => item.id === this.currentWorkSpaceId
     );
     if (!workspace) {
-      return { id: -1, title: "Root" };
+      return { id: -1, title: "Empty" };
     }
     return workspace;
   }

@@ -1,7 +1,5 @@
 import { ExplorerNode, ExplorerType } from "@/src/core/explorer/explorer";
 
-import FolderSvg from "../shared/svg/FolderSvg";
-
 interface ExplorerViewProps {
   explorerNodes: ExplorerNode[];
   renderNode: (node: ExplorerNode) => React.ReactNode;

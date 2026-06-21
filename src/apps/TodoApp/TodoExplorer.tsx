@@ -4,12 +4,15 @@ import DirectoryMenuContext from "@/src/ui/explorer/DirectoryMenuContext";
 import FileMenuContext from "@/src/ui/explorer/FileMenuContext";
 import PopUp from "@/src/ui/shared/cards/PopUp";
 import Button from "@/src/ui/shared/controls/Button";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ExplorerType } from "@/src/core/explorer/explorer";
 import ExplorerView from "@/src/ui/explorer/ExplorerView";
 import ExplorerRowDelegate from "./ExplorerRowDelegate";
 import FolderSvg from "@/src/ui/shared/svg/FolderSvg";
-import { title } from "process";
+import TextInput from "@/src/ui/shared/controls/TextInput";
+import Scrim from "@/src/ui/shared/controls/Scrim";
+import FloatingPortal from "@/src/ui/shared/cards/FloatingPortal";
+import ExplorerContainer from "@/src/ui/explorer/ExplorerContainer";
 
 interface TodoExplorerProps {}
 export default function TodoExplorer(props: TodoExplorerProps) {
@@ -22,6 +25,19 @@ export default function TodoExplorer(props: TodoExplorerProps) {
     x: number;
     y: number;
   } | null>(null);
+  const [showInput, setShowInput] = useState<boolean>(true);
+  const [activeDirectoryId, setActiveDirectoryId] = useState<number>(-1);
+  const bottomAnchorRef = useRef<HTMLDivElement>(null);
+
+  function handleInput(text: string) {
+    if (activeDirectoryId !== -1) {
+      controller.addList(text, activeDirectoryId);
+      setActiveDirectoryId(-1);
+    } else {
+      controller.addWorkSpace(text);
+    }
+    setShowInput(false);
+  }
   return (
     <>
       <PopUp visible={false} onClickedAway={() => {}}>
@@ -32,7 +48,8 @@ export default function TodoExplorer(props: TodoExplorerProps) {
               active={true}
               title="Confirm"
               onClick={() => {
-                if (deleteId) controller.deleteNode(deleteId);
+                if (deleteId) {
+                }
               }}
             >
               <p className="w-[5ch]">Yes</p>
@@ -56,7 +73,8 @@ export default function TodoExplorer(props: TodoExplorerProps) {
           y={activeMenu.y}
           open={true}
           onDelete={(id) => {
-            controller.deleteNode(id);
+            {
+            }
             setActiveMenu(null);
           }}
           onRename={(id) => {
@@ -73,7 +91,8 @@ export default function TodoExplorer(props: TodoExplorerProps) {
           y={activeMenu.y}
           open={true}
           onAddFile={(directoyId: number) => {
-            controller.addList("new file", directoyId);
+            setActiveDirectoryId(directoyId);
+            setShowInput(true);
             setActiveMenu(null);
           }}
           onRename={(directoryId) => {
@@ -90,13 +109,13 @@ export default function TodoExplorer(props: TodoExplorerProps) {
           open={true}
           onClose={() => setActiveMenu(null)}
           onAddWorkSpace={() => {
-            controller.addNode(ExplorerType.Container, "new directory", 0);
+            setShowInput(true);
             setActiveMenu(null);
           }}
         ></ExplorerMenuContext>
       )}
       <div
-        className="w-full h-full pb-5 overflow-auto"
+        className="w-full h-full pb-5 overflow-auto flex flex-col"
         onContextMenu={(e) => {
           e.preventDefault();
           setActiveMenu({
@@ -111,27 +130,64 @@ export default function TodoExplorer(props: TodoExplorerProps) {
           <h1 className="text-sm">{"Explorer"}</h1>
           <button
             onClick={() => {
-              controller.addWorkSpace("new directory");
+              setShowInput(true);
             }}
           >
-            <FolderSvg></FolderSvg>
+            <FolderSvg width={25} heigth={25}></FolderSvg>
           </button>
         </header>
-        <ExplorerView
-          explorerNodes={store.explorerNodes}
-          renderNode={(node) => (
-            <ExplorerRowDelegate
-              key={node.id}
-              node={node}
-              onContextMenu={(id, x, y) => {
-                const type =
-                  node.type === ExplorerType.Container ? "Container" : "Item";
-                setActiveMenu({ type, id, x, y });
-              }}
-            ></ExplorerRowDelegate>
-          )}
-        ></ExplorerView>
+        <div className="w-full h-fit max-h-[90%] overflow-auto mb-2">
+          <ExplorerView
+            explorerNodes={store.explorerNodes}
+            renderNode={(node) => (
+              <ExplorerContainer
+                key={node.id}
+                node={node}
+                children={store.childNodes.get(node.id) ?? []}
+                onContextMenu={(id, x, y) => {
+                  setActiveMenu({ type: "Container", id, x, y });
+                }}
+                addingChild={activeDirectoryId === node.id}
+                registerAnchorRef={(el) => {
+                  if (activeDirectoryId === node.id) {
+                    bottomAnchorRef.current = el;
+                  }
+                }}
+                renderNode={(node) => (
+                  <ExplorerRowDelegate
+                    key={node.id}
+                    node={node}
+                    onContextMenu={(id, x, y) => {
+                      const type =
+                        node.type === ExplorerType.Container
+                          ? "Container"
+                          : "Item";
+                      setActiveMenu({ type, id, x, y });
+                    }}
+                  ></ExplorerRowDelegate>
+                )}
+              ></ExplorerContainer>
+            )}
+          ></ExplorerView>
+        </div>
+        {showInput && activeDirectoryId === -1 && (
+          <div ref={bottomAnchorRef} className="mx-3 h-10"></div>
+        )}
       </div>
+      {showInput && (
+        <>
+          <Scrim onClickedAway={() => setShowInput(false)} z={20}></Scrim>
+          <FloatingPortal anchorRef={bottomAnchorRef} z={30}>
+            <div className="px-2 pt-0.5">
+              <TextInput
+                placeHolder="New Directory"
+                onEnter={(text: string) => handleInput(text)}
+                onChange={(text: string) => {}}
+              ></TextInput>
+            </div>
+          </FloatingPortal>
+        </>
+      )}
     </>
   );
 }

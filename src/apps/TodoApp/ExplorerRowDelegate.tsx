@@ -19,7 +19,7 @@ export default function ExplorerRowDelegate(props: ExplorerRowDelegateProps) {
       onContextMenu={(x, y) => {
         props.onContextMenu(nodeId, x, y);
       }}
-      onSelected={() => controller.nodeSelected(nodeId)}
+      onSelected={() => {}}
       onRename={(text) => controller.rename(nodeId, text)}
       onCancelEdit={() => controller.setEditId(-1)}
     ></ExplorerRow>
