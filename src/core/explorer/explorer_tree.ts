@@ -49,4 +49,10 @@ export class ExplorerTree {
   public getChildNodes(): Map<number, ExplorerNode[]> {
     return this.childNodes;
   }
+  public deleteNode(id: number, parentId: number) {
+    this.childNodes.set(
+      parentId,
+      (this.childNodes.get(parentId) ?? []).filter((item) => item.id !== id)
+    );
+  }
 }

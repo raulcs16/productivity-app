@@ -48,7 +48,7 @@ export default function Workspace(props: WorkspaceProps) {
       {/* BODY VIEWPORT WINDOW CONTAINER */}
       <div className="w-full flex-1 min-h-0 relative overflow-hidden">
         {/* Main Workspace (Takes full space, independent of sidebar status) */}
-        <div className="w-full h-full flex flex-col min-w-0 overflow-hidden">
+        <div className="w-full h-full flex flex-col min-w-0 overflow-auto">
           {props.workspace}
         </div>
 

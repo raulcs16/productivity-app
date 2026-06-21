@@ -40,7 +40,7 @@ export default function TodoExplorer(props: TodoExplorerProps) {
   }
   return (
     <>
-      <PopUp visible={false} onClickedAway={() => {}}>
+      <PopUp visible={deleteId !== null} onClickedAway={() => {}}>
         <div className="flex items-center flex-col gap-4 ">
           <p>Delete File ? </p>
           <div className="flex gap-4">
@@ -73,8 +73,7 @@ export default function TodoExplorer(props: TodoExplorerProps) {
           y={activeMenu.y}
           open={true}
           onDelete={(id) => {
-            {
-            }
+            controller.deleteList(id);
             setActiveMenu(null);
           }}
           onRename={(id) => {
@@ -180,7 +179,7 @@ export default function TodoExplorer(props: TodoExplorerProps) {
           <FloatingPortal anchorRef={bottomAnchorRef} z={30}>
             <div className="px-2 pt-0.5">
               <TextInput
-                placeHolder="New Directory"
+                placeHolder="New Item"
                 onEnter={(text: string) => handleInput(text)}
                 onChange={(text: string) => {}}
               ></TextInput>

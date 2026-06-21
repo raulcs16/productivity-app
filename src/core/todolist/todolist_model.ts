@@ -31,6 +31,11 @@ export class TodoListModel {
     this.currentListId = id;
     return id;
   }
+  public deleteList(id: number) {
+    if (this.currentListId === id) this.currentListId = 0;
+    this.lists = this.lists.filter((item) => item.id != id);
+    this.todos = this.todos.filter((item) => item.listId != id);
+  }
   public addWorkSpace(title: string): number {
     const id = Date.now();
     this.workspaces.push({
@@ -87,5 +92,8 @@ export class TodoListModel {
   }
   public getCurrentListIndex(): number {
     return this.lists.findIndex((item) => item.id === this.currentListId);
+  }
+  public getList(id: number): TodoList | undefined {
+    return this.lists.find((item) => item.id === id);
   }
 }

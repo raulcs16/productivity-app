@@ -25,7 +25,9 @@ interface TodoAppStore {
 interface TodoAppController {
   addWorkSpace: (title: string) => void;
   addList: (title: string, workSpaceId: number) => void;
+  deleteList: (id: number) => void;
   addTodo: (task: string, parentId: number) => void;
+
   updateTodoState: (id: number) => void;
   setCurrentListIndex: (index: number) => void;
   setEditId: (id: number) => void;
@@ -104,6 +106,12 @@ export function TodoAppContextProvider(props: TodoAppContextProps) {
         const id = models.todolist.addNewList(title, parentId);
         if (id < 0) return;
         models.explorer.addChildItem(title, id, parentId);
+      },
+      deleteList: (id: number) => {
+        const parentId = models.todolist.getList(id)?.workSpaceId;
+        if (!parentId) return;
+        models.todolist.deleteList(id);
+        models.explorer.deleteNode(id, parentId);
       },
       addTodo: (task: string) => {
         models.todolist.addTodo(task);
