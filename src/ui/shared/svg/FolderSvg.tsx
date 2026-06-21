@@ -1,6 +1,6 @@
 interface FolderSvgProps {
   width: number;
-  heigth: number;
+  height: number;
 }
 export default function FolderSvg(props: FolderSvgProps) {
   return (
@@ -14,7 +14,7 @@ export default function FolderSvg(props: FolderSvgProps) {
       strokeLinejoin="round"
       className="text-emerald-500/70 group-hover:text-emerald-400"
       width={props.width}
-      height={props.heigth}
+      height={props.height}
     >
       {/* The structural tabbed folder outline */}
       <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />

@@ -83,7 +83,7 @@ export default function TodoListApp(props: TodoListAppProps) {
                   title={"add Workspace"}
                   active={true}
                 >
-                  <FolderSvg width={50} heigth={50}></FolderSvg>
+                  <FolderSvg width={50} height={50}></FolderSvg>
                   <p>Add New WorkSpace</p>
                 </Button>
                 {store.currentWorkSpaceId > 0 && (

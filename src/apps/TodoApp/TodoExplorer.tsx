@@ -133,7 +133,7 @@ export default function TodoExplorer(props: TodoExplorerProps) {
               setShowInput(true);
             }}
           >
-            <FolderSvg width={25} heigth={25}></FolderSvg>
+            <FolderSvg width={25} height={25}></FolderSvg>
           </button>
         </header>
         <div className="w-full h-fit max-h-[90%] overflow-auto mb-2">

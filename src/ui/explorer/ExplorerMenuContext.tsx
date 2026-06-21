@@ -24,7 +24,7 @@ export default function ExplorerMenuContext(props: ExplorerMenuContextProps) {
       <ContextMenuItem
         text="add workspace"
         onTriggered={() => props.onAddWorkSpace()}
-        icon={<FolderSvg></FolderSvg>}
+        icon={<FolderSvg width={25} height={25}></FolderSvg>}
       ></ContextMenuItem>
     </ContextMenu>
   );
